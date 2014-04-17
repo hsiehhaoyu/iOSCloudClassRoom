@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>5BE6B4D1-BF8B-40CA-80F8-56231AAC3A5E</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Cloud_Classroom</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>D7B7BFB6-4809-4D54-A08E-8EB9FAECB044</key>
+		<string>ssh://github.com/hsiehhaoyu/iOSCloudClassRoom.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Cloud_Classroom/Cloud_Classroom.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>D7B7BFB6-4809-4D54-A08E-8EB9FAECB044</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/hsiehhaoyu/iOSCloudClassRoom.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D7B7BFB6-4809-4D54-A08E-8EB9FAECB044</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D7B7BFB6-4809-4D54-A08E-8EB9FAECB044</string>
+			<key>IDESourceControlWCCName</key>
+			<string>iOSCloudClassRoom</string>
+		</dict>
+	</array>
+</dict>
+</plist>
