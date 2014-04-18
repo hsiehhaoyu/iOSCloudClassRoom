@@ -9,36 +9,62 @@
 #import "CCLoginViewController.h"
 #import "CCLoginModel.h"
 
-@interface CCLoginViewController ()
+@interface CCLoginViewController () <UITextFieldDelegate>
 
-@property (strong,nonatomic) CCLoginModel *loginModel;
+@property (strong,nonatomic) CCLoginModel *model;
 
 @property (weak, nonatomic) IBOutlet UITextField *userIDTextField;
 
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
+
+@property (weak, nonatomic) IBOutlet UITextField *arg1TextField;
+
+@property (weak, nonatomic) IBOutlet UITextField *arg2TextField;
+
+@property (weak, nonatomic) IBOutlet UITextField *arg3TextField;
+
+@property (weak, nonatomic) IBOutlet UITextField *arg4TextField;
+
+@property (weak, nonatomic) IBOutlet UITextField *arg5TextField;
 
 @end
 
 @implementation CCLoginViewController
 
 - (IBAction)loginButtonClicked:(UIButton *)sender {
-    [self.loginModel loginWithUserID:self.userIDTextField.text
+    [self.model loginWithUserID:self.userIDTextField.text
                          andPassword:self.passwordTextField.text
                         onCompletion:nil];
 }
 
 - (IBAction)createButtonClicked:(UIButton *)sender {
     
-    [self.loginModel sendMessage];
+    [self.model sendMessageWithArgs:@[self.arg1TextField.text,
+                                      self.arg2TextField.text,
+                                      self.arg3TextField.text,
+                                      self.arg4TextField.text,
+                                      self.arg5TextField.text]];
 }
 
+-(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    
+    return YES;
+}
 
 -(void)viewDidLoad{
     
     [super viewDidLoad];
     
-    self.loginModel = [[CCLoginModel alloc] init];
-
+    self.model = [[CCLoginModel alloc] init];
+ 
+    self.arg1TextField.delegate = self;
+    self.arg2TextField.delegate = self;
+    self.arg3TextField.delegate = self;
+    self.arg4TextField.delegate = self;
+    self.arg5TextField.delegate = self;
 }
+
 
 @end

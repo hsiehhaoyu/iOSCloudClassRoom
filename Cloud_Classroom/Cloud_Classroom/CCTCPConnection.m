@@ -410,7 +410,8 @@
     self.inputStream = nil;
     self.outputStream = nil;
     
-    self.isConnected = NO; //this function is public, so need to put this here.
+    self.isConnected = NO;
+    self.hasSpaceToSend = NO;
     
     NSLog(@"Close connection done.");
 }

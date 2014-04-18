@@ -19,33 +19,31 @@
 
 @implementation CCLoginModel
 
--(void)sendMessage{
+-(void)sendMessageWithArgs:(NSArray *)args{
     
-    self.serverCH.receivedMessageBlock = ^(NSArray *receivedMessage){
-        
-        NSString *string = @"";
-        
-        for(NSString *line in receivedMessage){
-            string = [NSString stringWithFormat:@"%@%@\n", string, line];
+    
+    int i=4;
+    for(; i>0; i--){
+        if(![args[i]  isEqual: @""])
+        {
+            break;
         }
+    }
+    
+    NSMutableArray *mutaArgs = [[NSMutableArray alloc] init];
+    for(int j=1; j<=i; j++){
+        [mutaArgs addObject:args[j]];
+    }
         
-        UIAlertView *alert= [[UIAlertView alloc] initWithTitle:@"Receive msg"
-                                                       message:string
-                                                      delegate:nil
-                                             cancelButtonTitle:@"OK"
-                                             otherButtonTitles:nil];
-        [alert show];
-        alert= nil;
-    
-    };
-    
-    [self.serverCH sendMessageToServerWithCommand:CREATE_CLASS_REQ
-                                     andArguments:@[@"arg1",@"333"]
+        
+    [self.serverCH sendMessageToServerWithCommand:args[0]
+                                     andArguments:[mutaArgs copy]
                                      onCompletion:^(SendMessageResult result) {
         NSLog(@"Msg sent");
     }];
 
 }
+
 
 
 -(void)loginWithUserID:(NSString *)userID andPassword:(NSString *)password onCompletion:(void (^)(LoginResult))completion{
@@ -58,6 +56,7 @@
                                                  cancelButtonTitle:@"OK"
                                                  otherButtonTitles:nil];
         }else{
+            NSLog(@"Logged in faild, code: %ld", result);
             alert= [[UIAlertView alloc] initWithTitle:@"Receive msg"
                                                            message:@"Login failed"
                                                           delegate:nil
@@ -80,6 +79,26 @@
                                                                   andPort:SERVER_PORT_NUM];
         CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
         appDelegate.serverCommunicationHandler = self.serverCH;
+        
+        
+        
+        self.serverCH.receivedMessageBlock = ^(NSArray *receivedMessage){
+            
+            NSString *string = @"";
+            
+            for(NSString *line in receivedMessage){
+                string = [NSString stringWithFormat:@"%@%@\n", string, line];
+            }
+            
+            UIAlertView *alert= [[UIAlertView alloc] initWithTitle:@"Receive msg"
+                                                           message:string
+                                                          delegate:nil
+                                                 cancelButtonTitle:@"OK"
+                                                 otherButtonTitles:nil];
+            [alert show];
+            alert= nil;
+            
+        };
     }
     
     return self;

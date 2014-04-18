@@ -16,6 +16,6 @@
           onCompletion:(void (^)(LoginResult result))completion;
 
 
--(void)sendMessage;
+-(void)sendMessageWithArgs:(NSArray *)args;
 
 @end

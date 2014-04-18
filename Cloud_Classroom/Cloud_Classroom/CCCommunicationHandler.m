@@ -13,6 +13,8 @@
 
 #import "CCCommunicationHandler.h"
 #import "CCConfiguration.h"
+#import "CCMessage.h"
+#import "CCMessageQueue.h"
 
 @interface CCCommunicationHandler ()
 
@@ -24,7 +26,8 @@
 //Blocks
 @property (strong,atomic) void (^completionBlockOfLogin)(LoginResult);
 
-
+//Message queue
+@property (strong,atomic) CCMessageQueue *queue;
 
 @end
 
@@ -59,10 +62,6 @@
     [self sendMessageToServerWithCommand:LOGIN_REQ andArguments:@[userID,password] onCompletion:^(SendMessageResult result) {
         if (result == SendMessageResultSucceeded) {
             self.completionBlockOfLogin = completion;
-        }else if (result == SendMessageResultIsAlreadyTryingToConnect){
-            completion(LoginResultIsAlreadyTryingToConnect);
-        }else if (result == SendMessageResultHasNoSpaceToSend){
-            completion(LoginResultHasNoSpaceToSend);
         }else if (result == SendMessageResultCanNotConnect){
             completion(LoginResultCanNotConnect);
         }else{
@@ -90,16 +89,23 @@
     
     }else if(!self.isConnectedToServer){
         [self tryToConnectServerAndOnCompletion:^(TryToConnectResult result) {
-            //Already connect could happen, since someone might be trying when we exam self.isConnectedToServer
-            if(result == TryToConnectResultSucceeded || result == TryToConnectResultAlreadyConnected){
+            //AlreadyConnected could happen, since someone might be trying when we exam self.isConnectedToServer
+            if(result == TryToConnectResultSucceeded ||
+               result == TryToConnectResultAlreadyConnected){
                 //send again
                 [self sendMessageToServerWithCommand:command andArguments:arguments onCompletion:^(SendMessageResult result) {
                     if(completion)
                         completion(result);
                 }];
             }else if(result == TryToConnectResultAlreadyTrying){
-                if(completion)
-                    completion(SendMessageResultIsAlreadyTryingToConnect);
+                
+                [self.queue pushMessage:[[CCMessage alloc] initWithCommand:command andArguments:arguments andCompletionBlock:^(SendMessageResult result) {
+                    completion(result);
+                }]];
+                
+                NSLog(@"Is already trying to connect when sending message, put it into queue");
+//                if(completion)
+//                    completion(SendMessageResultIsAlreadyTryingToConnect);
             }else{ //failed
                 if (completion)
                     completion(SendMessageResultCanNotConnect);
@@ -139,18 +145,40 @@
         
         NSLog(@"message: %@",message);
         
-        [self.serverConnection sendString:message onCompletion:^(SendDataResult result) {
-            if (result == SendDataResultSucceeded) {
-                if(completion)
-                    completion(SendMessageResultSucceeded);
-            }else if(result == SendDataResultHasNoSpaceToSend){
-                if(completion)
-                    completion(SendMessageResultHasNoSpaceToSend);
-            }else{ //all other cases treat as failed
-                if(completion)
-                    completion(SendMessageResultFailed);
-            }
-        }];
+        //if other messages in queue are still waiting to be sent, put this in the queue
+        //(This will generate a new problem, if some other message are already in queue and
+        //is going to be send again, they will be put in queue again if still something in
+        //the queue!)
+        
+//        if(!self.queue.isEmpty){
+//        
+//            [self.queue pushMessage:[[CCMessage alloc] initWithCommand:command andArguments:arguments andCompletionBlock:^(SendMessageResult result) {
+//                completion(result);
+//            }]];
+//            
+//            NSLog(@"Queue is not empty while trying to send message, put it into queue");
+//        
+//        }else{
+        
+            [self.serverConnection sendString:message onCompletion:^(SendDataResult result) {
+                if (result == SendDataResultSucceeded) {
+                    if(completion)
+                        completion(SendMessageResultSucceeded);
+                }else if(result == SendDataResultHasNoSpaceToSend){
+                    [self.queue pushMessage:[[CCMessage alloc] initWithCommand:command andArguments:arguments andCompletionBlock:^(SendMessageResult result) {
+                        completion(result);
+                    }]];
+                    
+                    NSLog(@"Has no space to send when sending message, put it into queue");
+                    
+    //                if(completion)
+    //                    completion(SendMessageResultHasNoSpaceToSend);
+                }else{ //all other cases treat as failed
+                    if(completion)
+                        completion(SendMessageResultFailed);
+                }
+            }];
+        //}
     }
 }
 
@@ -164,6 +192,10 @@
     
     NSArray *message = [self decodeStringToMessage:receivedString];
     
+    NSLog(@"Received message:");
+    for(NSString *line in message)
+        NSLog(@"%@", line);
+    
     //Recieve Login_RES
     if([[message firstObject]  isEqual: LOGIN_RES]){
         
@@ -173,7 +205,8 @@
                 self.completionBlockOfLogin(LoginResultInvalidUser);
             }else if ([[message objectAtIndex:1] isEqualToString:LOGIN_FAIL]){
                 self.completionBlockOfLogin(LoginResultFailed);
-            }else{
+            }else{ //Success
+                //NSLog(@"CookieID: %@", message[2]);
                 self.cookieID = [message objectAtIndex:2];
                 self.completionBlockOfLogin(LoginResultSucceeded);
             }
@@ -210,6 +243,57 @@
     return [treatedMsg copy];
 }
 
+//if queue is not empty, try to start to send first one.
+//this will trigger further actions of sending the
+//rest messages. 
+-(void)sendFirstMessageInQueue{
+    
+    //Don't use while, since the block will also call this again and might be conflict
+    if(!self.queue.isEmpty){
+        if(self.isConnectedToServer){
+            
+            if(self.serverConnection.hasSpaceToSend){
+                CCMessage *message = [self.queue popMessage];
+                
+                if(message){
+                    [self sendMessageToServerWithCommand:message.command
+                                            andArguments:message.arguments
+                                            onCompletion:^(SendMessageResult result) {
+                                                if(message.completionBlock)
+                                                    message.completionBlock(result);
+                    }];
+                }else{
+                    NSLog(@"Weird, queue is not empty but couldn't pop a valid msg.");
+                }
+            }
+        }else{
+            [self tryToConnectServerAndOnCompletion:^(TryToConnectResult result) {
+                //make all messages completed with failure of connection if cannot connect
+                if(result == TryToConnectResultFailed)
+                    [self makeAllMessagesInQueueCompletedWithResult:SendMessageResultCanNotConnect];
+                //No need to do things in other cases, since it will automatically
+                //trigger this function again.
+            }];
+        }
+    }
+
+}
+
+-(void)makeAllMessagesInQueueCompletedWithResult:(SendMessageResult)result{
+    while(!self.queue.isEmpty){
+        CCMessage *message = [self.queue popMessage];
+        if(message){
+            if(message.completionBlock)
+                message.completionBlock(result);
+        }
+    }
+}
+
+-(void)removeAllMessagesInQueue{
+
+    [self.queue removeAllMessages];
+
+}
 
 -(void)tryToConnectServerAndOnCompletion:(void (^)(TryToConnectResult))completion{
     
@@ -228,8 +312,15 @@
             }];
             
             [self.serverConnection setWhatToDoWhenHasSpaceToSendWithBlock:^{
-                if(weakSelf.hasSpaceToSendBlock)
-                    weakSelf.hasSpaceToSendBlock();
+                [weakSelf sendFirstMessageInQueue];
+            }];
+            
+            [self.serverConnection setWhatToDoWhenHasErrorOccurredWithBlock:^{
+                [weakSelf sendFirstMessageInQueue];
+            }];
+            
+            [self.serverConnection setWhatToDoWhenHasEndEncounteredWithBlock:^{
+                [weakSelf sendFirstMessageInQueue];
             }];
             
         }
@@ -299,6 +390,8 @@
         self.cookieID = nil;
     }
     
+    [self.queue removeAllMessages];
+    
     self.serverConnection = [[CCTCPConnection alloc] initWithURL:url andPort:port];
     
     if (self.serverConnection) { //init successfully
@@ -329,6 +422,7 @@
     
     if (self) {
         self.cookieID = nil;
+        self.queue = [[CCMessageQueue alloc] init];
     }
     
     return self;

@@ -11,12 +11,12 @@
 
 typedef NS_ENUM(NSInteger, SendMessageResult) {
     SendMessageResultServerInfoNotSet,
-    SendMessageResultIsAlreadyTryingToConnect, //some one else is already try to connect now.
+    //SendMessageResultIsAlreadyTryingToConnect, //some one else is already try to connect now.
     SendMessageResultCanNotConnect,
     SendMessageResultNoCommand,
     SendMessageResultSucceeded,
     SendMessageResultInvalidArguments,
-    SendMessageResultHasNoSpaceToSend,
+    //SendMessageResultHasNoSpaceToSend,
     SendMessageResultFailed
 };
 
@@ -24,10 +24,10 @@ typedef NS_ENUM(NSInteger, LoginResult) {
     LoginResultSucceeded,
     LoginResultInvalidUser,
     LoginResultFailed, //Password incorrect or other reason?
-    LoginResultServerInfoNotSet,
-    LoginResultIsAlreadyTryingToConnect,
-    LoginResultCanNotConnect,
-    LoginResultHasNoSpaceToSend
+    //LoginResultServerInfoNotSet,
+    //LoginResultIsAlreadyTryingToConnect,
+    LoginResultCanNotConnect
+    //LoginResultHasNoSpaceToSend
 };
 
 @interface CCCommunicationHandler : NSObject
@@ -38,7 +38,7 @@ typedef NS_ENUM(NSInteger, LoginResult) {
 
 //Blocks
 @property (strong,atomic) void (^receivedMessageBlock)(NSArray *receivedMessage);
-@property (strong,atomic) void (^hasSpaceToSendBlock)();
+//@property (strong,atomic) void (^hasSpaceToSendBlock)();
 
 
 -(instancetype)init;
@@ -57,6 +57,9 @@ typedef NS_ENUM(NSInteger, LoginResult) {
           onCompletion:(void (^)(LoginResult result))completion;
 
 -(void)logout;
-//-(void)testFunction;
+
+-(void)removeAllMessagesInQueue;
+
+-(void)makeAllMessagesInQueueCompletedWithResult:(SendMessageResult)result;
 
 @end

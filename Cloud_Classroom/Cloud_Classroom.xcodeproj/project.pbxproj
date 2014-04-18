@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5CA36E701900BC370069A1BA /* CCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA36E6F1900BC370069A1BA /* CCMessage.m */; };
+		5CA36E731900BCF00069A1BA /* CCMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA36E721900BCF00069A1BA /* CCMessageQueue.m */; };
 		5CB294E218F61F2700A2AB45 /* CCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CB294E118F61F2700A2AB45 /* CCLoginViewController.m */; };
 		5CB294E518F6233900A2AB45 /* CCLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CB294E418F6233900A2AB45 /* CCLoginModel.m */; };
 		5CB294E918F63A6600A2AB45 /* CCCommunicationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CB294E818F63A6600A2AB45 /* CCCommunicationHandler.m */; };
@@ -37,6 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5CA36E6E1900BC370069A1BA /* CCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMessage.h; sourceTree = "<group>"; };
+		5CA36E6F1900BC370069A1BA /* CCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMessage.m; sourceTree = "<group>"; };
+		5CA36E711900BCF00069A1BA /* CCMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMessageQueue.h; sourceTree = "<group>"; };
+		5CA36E721900BCF00069A1BA /* CCMessageQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMessageQueue.m; sourceTree = "<group>"; };
 		5CB294E018F61F2700A2AB45 /* CCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLoginViewController.h; sourceTree = "<group>"; };
 		5CB294E118F61F2700A2AB45 /* CCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLoginViewController.m; sourceTree = "<group>"; };
 		5CB294E318F6233900A2AB45 /* CCLoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLoginModel.h; sourceTree = "<group>"; };
@@ -187,6 +193,10 @@
 			children = (
 				5CB294E718F63A6600A2AB45 /* CCCommunicationHandler.h */,
 				5CB294E818F63A6600A2AB45 /* CCCommunicationHandler.m */,
+				5CA36E711900BCF00069A1BA /* CCMessageQueue.h */,
+				5CA36E721900BCF00069A1BA /* CCMessageQueue.m */,
+				5CA36E6E1900BC370069A1BA /* CCMessage.h */,
+				5CA36E6F1900BC370069A1BA /* CCMessage.m */,
 				5CD631F118F4E07700FF29F0 /* CCTCPConnection.h */,
 				5CD631F218F4E07700FF29F0 /* CCTCPConnection.m */,
 			);
@@ -293,7 +303,9 @@
 			files = (
 				5CB294E218F61F2700A2AB45 /* CCLoginViewController.m in Sources */,
 				5CB294E518F6233900A2AB45 /* CCLoginModel.m in Sources */,
+				5CA36E701900BC370069A1BA /* CCMessage.m in Sources */,
 				5CD631CB18F4DF9200FF29F0 /* CCAppDelegate.m in Sources */,
+				5CA36E731900BCF00069A1BA /* CCMessageQueue.m in Sources */,
 				5CD631F318F4E07700FF29F0 /* CCTCPConnection.m in Sources */,
 				5CD631C718F4DF9200FF29F0 /* main.m in Sources */,
 				5CB294E918F63A6600A2AB45 /* CCCommunicationHandler.m in Sources */,
