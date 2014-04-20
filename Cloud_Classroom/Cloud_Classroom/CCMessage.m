@@ -8,13 +8,20 @@
 
 #import "CCMessage.h"
 
+
 @interface CCMessage ()
 
 @property (nonatomic,strong,readwrite) NSString *command;
 
 @property (nonatomic,strong,readwrite) NSArray *arguments;
 
-@property (nonatomic,strong,readwrite) void (^completionBlock)(SendMessageResult result);
+//What to do when send completion (could be fail or other cases)
+@property (nonatomic,strong,readwrite) void (^sendCompletionBlock)(SendMessageResult result);
+
+//What to do when receive a response from server
+@property (nonatomic,strong,readwrite) void (^receiveResponseBlock)(NSString *command, NSArray *arguments);
+
+@property (nonatomic,strong,readwrite) NSDate *generatedTime;
 
 @end
 
@@ -23,14 +30,23 @@
 
 -(instancetype)initWithCommand:(NSString *)command
                   andArguments:(NSArray *)arguments
-            andCompletionBlock:(void (^)(SendMessageResult result))completionBlock{
+        andSendCompletionBlock:(void (^)(SendMessageResult))sendCompletionBlock
+       andReceiveResponseBlock:(void (^)(NSString *, NSArray *))receiveResponseBlock{
     
     self = [super init];
     
     if(self){
+        
+        //this cannot be nil, or an invalid message
+        if(!command){
+            return nil;
+        }
+        
         self.command = command;
         self.arguments = arguments;
-        self.completionBlock = completionBlock;
+        self.sendCompletionBlock = sendCompletionBlock;
+        self.receiveResponseBlock = receiveResponseBlock;
+        self.generatedTime = [NSDate date];
     }
     
     return self;
@@ -39,7 +55,7 @@
 //Don't use this one
 -(instancetype)init{
     [NSException raise:NSInternalInconsistencyException
-                format:@"Need to use initWithURL:..."];
+                format:@"Need to use initWithCommand:..."];
     
     return nil;
 }

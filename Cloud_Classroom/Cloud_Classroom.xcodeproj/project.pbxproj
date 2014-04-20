@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C2B938B1902B37700B85DD1 /* CCClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C2B938A1902B37700B85DD1 /* CCClass.m */; };
 		5CA36E701900BC370069A1BA /* CCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA36E6F1900BC370069A1BA /* CCMessage.m */; };
 		5CA36E731900BCF00069A1BA /* CCMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA36E721900BCF00069A1BA /* CCMessageQueue.m */; };
+		5CA4953119037B330007FD28 /* CCtestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA4953019037B330007FD28 /* CCtestViewController.m */; };
 		5CB294E218F61F2700A2AB45 /* CCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CB294E118F61F2700A2AB45 /* CCLoginViewController.m */; };
-		5CB294E518F6233900A2AB45 /* CCLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CB294E418F6233900A2AB45 /* CCLoginModel.m */; };
 		5CB294E918F63A6600A2AB45 /* CCCommunicationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CB294E818F63A6600A2AB45 /* CCCommunicationHandler.m */; };
+		5CC8221F1901FA3B00E3507E /* CCMessageCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC8221E1901FA3B00E3507E /* CCMessageCenter.m */; };
 		5CD631BB18F4DF9100FF29F0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CD631BA18F4DF9100FF29F0 /* Foundation.framework */; };
 		5CD631BD18F4DF9100FF29F0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CD631BC18F4DF9100FF29F0 /* CoreGraphics.framework */; };
 		5CD631BF18F4DF9100FF29F0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CD631BE18F4DF9100FF29F0 /* UIKit.framework */; };
@@ -39,17 +41,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5C2B93891902B37700B85DD1 /* CCClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCClass.h; sourceTree = "<group>"; };
+		5C2B938A1902B37700B85DD1 /* CCClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCClass.m; sourceTree = "<group>"; };
 		5CA36E6E1900BC370069A1BA /* CCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMessage.h; sourceTree = "<group>"; };
 		5CA36E6F1900BC370069A1BA /* CCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMessage.m; sourceTree = "<group>"; };
 		5CA36E711900BCF00069A1BA /* CCMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMessageQueue.h; sourceTree = "<group>"; };
 		5CA36E721900BCF00069A1BA /* CCMessageQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMessageQueue.m; sourceTree = "<group>"; };
+		5CA4952F19037B330007FD28 /* CCtestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCtestViewController.h; sourceTree = "<group>"; };
+		5CA4953019037B330007FD28 /* CCtestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCtestViewController.m; sourceTree = "<group>"; };
 		5CB294E018F61F2700A2AB45 /* CCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLoginViewController.h; sourceTree = "<group>"; };
 		5CB294E118F61F2700A2AB45 /* CCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLoginViewController.m; sourceTree = "<group>"; };
-		5CB294E318F6233900A2AB45 /* CCLoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLoginModel.h; sourceTree = "<group>"; };
-		5CB294E418F6233900A2AB45 /* CCLoginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLoginModel.m; sourceTree = "<group>"; };
 		5CB294E618F6383800A2AB45 /* CCConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCConfiguration.h; sourceTree = "<group>"; };
 		5CB294E718F63A6600A2AB45 /* CCCommunicationHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCCommunicationHandler.h; sourceTree = "<group>"; };
 		5CB294E818F63A6600A2AB45 /* CCCommunicationHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCCommunicationHandler.m; sourceTree = "<group>"; };
+		5CC8221D1901FA3B00E3507E /* CCMessageCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMessageCenter.h; sourceTree = "<group>"; };
+		5CC8221E1901FA3B00E3507E /* CCMessageCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMessageCenter.m; sourceTree = "<group>"; };
 		5CD631B718F4DF9100FF29F0 /* Cloud_Classroom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cloud_Classroom.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CD631BA18F4DF9100FF29F0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5CD631BC18F4DF9100FF29F0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -95,6 +101,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5CA4952E190328470007FD28 /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				5C2B93891902B37700B85DD1 /* CCClass.h */,
+				5C2B938A1902B37700B85DD1 /* CCClass.m */,
+				5CA36E711900BCF00069A1BA /* CCMessageQueue.h */,
+				5CA36E721900BCF00069A1BA /* CCMessageQueue.m */,
+				5CA36E6E1900BC370069A1BA /* CCMessage.h */,
+				5CA36E6F1900BC370069A1BA /* CCMessage.m */,
+			);
+			name = Unit;
+			sourceTree = "<group>";
+		};
 		5CD631AE18F4DF9100FF29F0 = {
 			isa = PBXGroup;
 			children = (
@@ -130,9 +149,9 @@
 			children = (
 				5CB294E618F6383800A2AB45 /* CCConfiguration.h */,
 				5CD631CC18F4DF9200FF29F0 /* Main.storyboard */,
+				5CA4952E190328470007FD28 /* Unit */,
 				5CD631F418F4E08600FF29F0 /* Tools */,
 				5CD631EF18F4DFAE00FF29F0 /* Controllers */,
-				5CD631F018F4DFD300FF29F0 /* Models */,
 				5CD631D218F4DF9200FF29F0 /* Images.xcassets */,
 				5CD631C118F4DF9100FF29F0 /* Supporting Files */,
 			);
@@ -175,28 +194,19 @@
 			children = (
 				5CB294E018F61F2700A2AB45 /* CCLoginViewController.h */,
 				5CB294E118F61F2700A2AB45 /* CCLoginViewController.m */,
+				5CA4952F19037B330007FD28 /* CCtestViewController.h */,
+				5CA4953019037B330007FD28 /* CCtestViewController.m */,
 			);
 			name = Controllers;
-			sourceTree = "<group>";
-		};
-		5CD631F018F4DFD300FF29F0 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				5CB294E318F6233900A2AB45 /* CCLoginModel.h */,
-				5CB294E418F6233900A2AB45 /* CCLoginModel.m */,
-			);
-			name = Models;
 			sourceTree = "<group>";
 		};
 		5CD631F418F4E08600FF29F0 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				5CC8221D1901FA3B00E3507E /* CCMessageCenter.h */,
+				5CC8221E1901FA3B00E3507E /* CCMessageCenter.m */,
 				5CB294E718F63A6600A2AB45 /* CCCommunicationHandler.h */,
 				5CB294E818F63A6600A2AB45 /* CCCommunicationHandler.m */,
-				5CA36E711900BCF00069A1BA /* CCMessageQueue.h */,
-				5CA36E721900BCF00069A1BA /* CCMessageQueue.m */,
-				5CA36E6E1900BC370069A1BA /* CCMessage.h */,
-				5CA36E6F1900BC370069A1BA /* CCMessage.m */,
 				5CD631F118F4E07700FF29F0 /* CCTCPConnection.h */,
 				5CD631F218F4E07700FF29F0 /* CCTCPConnection.m */,
 			);
@@ -301,11 +311,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CC8221F1901FA3B00E3507E /* CCMessageCenter.m in Sources */,
 				5CB294E218F61F2700A2AB45 /* CCLoginViewController.m in Sources */,
-				5CB294E518F6233900A2AB45 /* CCLoginModel.m in Sources */,
+				5CA4953119037B330007FD28 /* CCtestViewController.m in Sources */,
 				5CA36E701900BC370069A1BA /* CCMessage.m in Sources */,
 				5CD631CB18F4DF9200FF29F0 /* CCAppDelegate.m in Sources */,
 				5CA36E731900BCF00069A1BA /* CCMessageQueue.m in Sources */,
+				5C2B938B1902B37700B85DD1 /* CCClass.m in Sources */,
 				5CD631F318F4E07700FF29F0 /* CCTCPConnection.m in Sources */,
 				5CD631C718F4DF9200FF29F0 /* main.m in Sources */,
 				5CB294E918F63A6600A2AB45 /* CCCommunicationHandler.m in Sources */,

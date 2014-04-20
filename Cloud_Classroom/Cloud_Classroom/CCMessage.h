@@ -7,7 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#include "CCCommunicationHandler.h"
+
+typedef NS_ENUM(NSInteger, SendMessageResult) {
+    SendMessageResultServerInfoNotSet,
+    //SendMessageResultIsAlreadyTryingToConnect, //some one else is already try to connect now.
+    SendMessageResultCanNotConnect,
+    SendMessageResultNoCommand,
+    SendMessageResultSucceeded,
+    SendMessageResultInvalidArguments,
+    //SendMessageResultHasNoSpaceToSend,
+    SendMessageResultFailed,
+    SendMessageResultTimeOut
+};
 
 @interface CCMessage : NSObject
 
@@ -15,11 +26,15 @@
 
 @property (nonatomic,strong,readonly) NSArray *arguments;
 
-@property (nonatomic,strong,readonly) void (^completionBlock)(SendMessageResult result);
+@property (nonatomic,strong,readonly) void (^sendCompletionBlock)(SendMessageResult result);
 
+@property (nonatomic,strong,readonly) void (^receiveResponseBlock)(NSString *command, NSArray *arguments);
+
+@property (nonatomic,strong,readonly) NSDate *generatedTime;
 
 -(instancetype)initWithCommand:(NSString *)command
                   andArguments:(NSArray *)arguments
-            andCompletionBlock:(void (^)(SendMessageResult result))completionBlock;
+        andSendCompletionBlock:(void (^)(SendMessageResult result))sendCompletionBlock
+       andReceiveResponseBlock:(void (^)(NSString *command, NSArray *arguments))receiveResponseBlock;
 
 @end

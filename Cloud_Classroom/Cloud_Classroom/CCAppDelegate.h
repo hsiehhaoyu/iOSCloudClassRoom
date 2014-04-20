@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CCCommunicationHandler.h"
+#import "CCMessageCenter.h"
 
 @interface CCAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, atomic) CCCommunicationHandler *serverCommunicationHandler;
+@property (strong, atomic) CCMessageCenter *serverMessageCenter;
 
 @end

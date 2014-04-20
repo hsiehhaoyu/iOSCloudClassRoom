@@ -89,4 +89,8 @@
 #define CONTENT_NOT_IN_CLASS @"CONTENT_NOT_IN_CLASS"
 #define ALREADY_PRESENTER @"ALREADY_PRESENTER"
 
+//================ MISC ==========================
+//device type
+#define IOS @"IOS"
+
 #endif

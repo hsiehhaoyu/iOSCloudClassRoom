@@ -6,25 +6,17 @@
 //  Copyright (c) 2014年 Hao-Yu Hsieh. All rights reserved.
 //
 /*
- * This class will help handle login/logout and
- * reconnect stuffs. Execpt those, other are treated
- * as normal message sending/receiving
+ 
  */
 
 #import "CCCommunicationHandler.h"
-#import "CCConfiguration.h"
-#import "CCMessage.h"
 #import "CCMessageQueue.h"
 
 @interface CCCommunicationHandler ()
 
 @property (strong,atomic) CCTCPConnection *serverConnection;
 
-//Will be nil if not logged in
-@property (strong,atomic) NSString *cookieID;
 
-//Blocks
-@property (strong,atomic) void (^completionBlockOfLogin)(LoginResult);
 
 //Message queue
 @property (strong,atomic) CCMessageQueue *queue;
@@ -43,32 +35,6 @@
 //    }
 //}
 
-/* 
- * BOOL in completion block will be YES if login successfully
- * Will logout first if already logged in
- */
--(void)loginWithUserID:(NSString *)userID andPassword:(NSString *)password onCompletion:(void (^)(LoginResult))completion{
-    
-    if(!completion){
-        [NSException raise:NSInternalInconsistencyException
-                    format:@"Completion block can't be nil."];
-        return;
-    }
-    
-    if(self.isLoggedIn){
-        [self logout];
-    }
-    
-    [self sendMessageToServerWithCommand:LOGIN_REQ andArguments:@[userID,password] onCompletion:^(SendMessageResult result) {
-        if (result == SendMessageResultSucceeded) {
-            self.completionBlockOfLogin = completion;
-        }else if (result == SendMessageResultCanNotConnect){
-            completion(LoginResultCanNotConnect);
-        }else{
-            NSLog(@"Impossible result occurred when login. Check your code. Result: %ld", result);
-        }
-    }];
-}
 
 /* 
  * Send request/response to server.
@@ -77,10 +43,20 @@
  * Note that even sent successfully 
  * does NOT gurantee server will receive it.
  */
-//completion block can be nil
--(void)sendMessageToServerWithCommand:(NSString *)command
-                         andArguments:(NSArray *)arguments
-                         onCompletion:(void (^)(SendMessageResult))completion{
+//completion block can be nil, but not suggested
+-(void)sendToServerWithMessage:(CCMessage *)message{
+    
+    if(!message){
+        [NSException raise:NSInternalInconsistencyException
+                format:@"Receive a nil message in sentToServerWithMessage:"];
+    
+        return;
+    }
+
+    NSString *command = message.command;
+    NSArray *arguments = message.arguments;
+    void (^completion)(SendMessageResult) = message.sendCompletionBlock;
+    
     
     if(!self.isServerInfoSet){
         
@@ -93,15 +69,11 @@
             if(result == TryToConnectResultSucceeded ||
                result == TryToConnectResultAlreadyConnected){
                 //send again
-                [self sendMessageToServerWithCommand:command andArguments:arguments onCompletion:^(SendMessageResult result) {
-                    if(completion)
-                        completion(result);
-                }];
+                [self sendToServerWithMessage:message];
+                
             }else if(result == TryToConnectResultAlreadyTrying){
                 
-                [self.queue pushMessage:[[CCMessage alloc] initWithCommand:command andArguments:arguments andCompletionBlock:^(SendMessageResult result) {
-                    completion(result);
-                }]];
+                [self.queue pushMessage:message];
                 
                 NSLog(@"Is already trying to connect when sending message, put it into queue");
 //                if(completion)
@@ -114,9 +86,9 @@
     }else{
         
         //start to combind all stuffs into one string
-        NSString *message;
+        NSString *messageString;
         if (command) { // is not nil
-            message = [NSString stringWithFormat:@"%@\n",command];
+            messageString = [NSString stringWithFormat:@"%@\n",command];
         }else{
             
             NSLog(@"Need a command!");
@@ -130,7 +102,7 @@
         if(arguments){ //something in the argument array(Note: it's allowed to be nil)
             for(id arg in arguments){
                 if([arg isKindOfClass:[NSString class]]){ //don't know why but isMemberOfClass doesn't work
-                    message = [NSString stringWithFormat:@"%@:%@\n", message, (NSString *)arg];
+                    messageString = [NSString stringWithFormat:@"%@:%@\n", messageString, (NSString *)arg];
                     //NSLog(@"Argument: %@", arg);
                 }else{
                     NSLog(@"At least an argument is not NSString!");
@@ -141,33 +113,22 @@
             }
         }
         
-        message = [NSString stringWithFormat:@"%@END\n",message];
+        messageString = [NSString stringWithFormat:@"%@END\n",messageString];
         
-        NSLog(@"message: %@",message);
+        NSLog(@"messageString: %@",messageString);
         
         //if other messages in queue are still waiting to be sent, put this in the queue
         //(This will generate a new problem, if some other message are already in queue and
         //is going to be send again, they will be put in queue again if still something in
         //the queue!)
         
-//        if(!self.queue.isEmpty){
-//        
-//            [self.queue pushMessage:[[CCMessage alloc] initWithCommand:command andArguments:arguments andCompletionBlock:^(SendMessageResult result) {
-//                completion(result);
-//            }]];
-//            
-//            NSLog(@"Queue is not empty while trying to send message, put it into queue");
-//        
-//        }else{
         
-            [self.serverConnection sendString:message onCompletion:^(SendDataResult result) {
+            [self.serverConnection sendString:messageString onCompletion:^(SendDataResult result) {
                 if (result == SendDataResultSucceeded) {
                     if(completion)
                         completion(SendMessageResultSucceeded);
                 }else if(result == SendDataResultHasNoSpaceToSend){
-                    [self.queue pushMessage:[[CCMessage alloc] initWithCommand:command andArguments:arguments andCompletionBlock:^(SendMessageResult result) {
-                        completion(result);
-                    }]];
+                    [self.queue pushMessage:message];
                     
                     NSLog(@"Has no space to send when sending message, put it into queue");
                     
@@ -178,7 +139,7 @@
                         completion(SendMessageResultFailed);
                 }
             }];
-        //}
+        
     }
 }
 
@@ -190,46 +151,24 @@
     
     NSString *receivedString = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     
-    NSArray *message = [self decodeStringToMessage:receivedString];
+    NSArray *messageInArray = [self decodeStringToMessageInArrayFormat:receivedString];
     
     NSLog(@"Received message:");
-    for(NSString *line in message)
+    for(NSString *line in messageInArray)
         NSLog(@"%@", line);
     
-    //Recieve Login_RES
-    if([[message firstObject]  isEqual: LOGIN_RES]){
         
-        if(self.completionBlockOfLogin){
-            
-            if([[message objectAtIndex:1] isEqualToString:INVALID_USER]){
-                self.completionBlockOfLogin(LoginResultInvalidUser);
-            }else if ([[message objectAtIndex:1] isEqualToString:LOGIN_FAIL]){
-                self.completionBlockOfLogin(LoginResultFailed);
-            }else{ //Success
-                //NSLog(@"CookieID: %@", message[2]);
-                self.cookieID = [message objectAtIndex:2];
-                self.completionBlockOfLogin(LoginResultSucceeded);
-            }
-            
-            self.completionBlockOfLogin = nil; //release it
-            
-        }else{
-            NSLog(@"No Completion block but receive LOGIN_RES !! Weird! Action abort");
-        }
-        
-    }else{ //other types of message
-    
-        if(self.receivedMessageBlock){
-            self.receivedMessageBlock(message);
-        }else{
-            NSLog(@"Received message but no block can be called!");
-        }
-        
+    if(self.receivedMessageBlock){
+        self.receivedMessageBlock(messageInArray);
+    }else{
+        NSLog(@"Received message but no block can be called!");
     }
+        
+    
 }
 
 //Decode to command and arguments
--(NSArray *)decodeStringToMessage:(NSString *)string{
+-(NSArray *)decodeStringToMessageInArrayFormat:(NSString *)string{
     //todo: handle multiple message case, include fragment(seperate with END\n?)
     NSArray *originMsg = [string componentsSeparatedByString:@"\n"];
     
@@ -256,12 +195,7 @@
                 CCMessage *message = [self.queue popMessage];
                 
                 if(message){
-                    [self sendMessageToServerWithCommand:message.command
-                                            andArguments:message.arguments
-                                            onCompletion:^(SendMessageResult result) {
-                                                if(message.completionBlock)
-                                                    message.completionBlock(result);
-                    }];
+                    [self sendToServerWithMessage:message];
                 }else{
                     NSLog(@"Weird, queue is not empty but couldn't pop a valid msg.");
                 }
@@ -283,8 +217,8 @@
     while(!self.queue.isEmpty){
         CCMessage *message = [self.queue popMessage];
         if(message){
-            if(message.completionBlock)
-                message.completionBlock(result);
+            if(message.sendCompletionBlock)
+                message.sendCompletionBlock(result);
         }
     }
 }
@@ -343,54 +277,15 @@
     }
 }
 
-//use cookieID to verify, which will be nil if not logged in
--(BOOL)isLoggedIn{
-    return (self.cookieID) ? YES : NO;
-}
-
-//logout (will connect to server to logout if not connected)
-//we ignore the response msg from server, since that doesn't
-//affect the result in our case
--(void)logout{
-    
-    if(!self.isLoggedIn){
-        NSLog(@"Not logged in while trying to logout");
-    }else{
-    
-        [self sendMessageToServerWithCommand:LOGOUT_REQ andArguments:@[self.cookieID] onCompletion:^(SendMessageResult result) {
-            
-            //We don't do any thing if cannot sucessfully send msg,
-            //since it doesn't affect much (won't lead to error
-            //state in our design)
-            if(result != SendMessageResultSucceeded){
-                NSLog(@"Can't send log out msg!");
-            }
-        }];
-        
-        self.cookieID = nil;
-        
-        NSLog(@"Logged out");
-    
-    }
-}
-
 
 //return YES if init (not connect) the serverConnection successfully
 //will set to logout state, close existing connection, and init a new TCPConnection
 -(BOOL)setServerURL:(NSURL *)url andPort:(NSInteger)port{
     
-    if(self.isConnectedToServer){
-        if (self.isLoggedIn) {
-            [self logout];
-        }
-        [self.serverConnection endConnection]; //can't put below, since it may be nil
-    }else{
-        //we don't use logout function if not connected, since it will connection to server again
-        //which is not necessary and also may cause problem (e.g. connection could be nil at this time)
-        self.cookieID = nil;
-    }
-    
     [self.queue removeAllMessages];
+    
+    if(self.serverConnection)
+        [self.serverConnection endConnection];
     
     self.serverConnection = [[CCTCPConnection alloc] initWithURL:url andPort:port];
     
@@ -421,7 +316,6 @@
     self = [super init];
     
     if (self) {
-        self.cookieID = nil;
         self.queue = [[CCMessageQueue alloc] init];
     }
     
