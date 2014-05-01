@@ -9,7 +9,8 @@
 #import "CCLoginViewController.h"
 #import "CCAppDelegate.h"
 #import "CCConfiguration.h"
-#import "CCtestViewController.h"
+#import "CCMiscHelper.h"
+#import "CCClassTableViewController.h"
 
 @interface CCLoginViewController () <UITextFieldDelegate>
 
@@ -19,6 +20,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 
 @property (strong,atomic) CCMessageCenter *serverMC;
+
+
 
 @end
 
@@ -33,44 +36,51 @@
                           
                           dispatch_async(dispatch_get_main_queue(), ^{
                               
-                              UIAlertView *alert;
+                              
                               if(sentResult == SendMessageResultSucceeded){
-                                  if([status isEqualToString:LOGGED_IN] || [status isEqualToString:DUPLICATE]){
+                                  if([status isEqualToString:LOGGED_IN]){
                                   
                                       [self performSegueWithIdentifier:@"Login" sender:self];
                                   
                                   }else{
                               
-                                      NSLog(@"Login faild, incorrect ID or password. status: %@", status);
-                                      alert= [[UIAlertView alloc] initWithTitle:@"Login Failed"
-                                                                        message:status
-                                                                       delegate:nil
-                                                              cancelButtonTitle:@"OK"
-                                                              otherButtonTitles:nil];
+                                      NSLog(@"Login faild. status: %@", status);
+                                      
+                                      NSString *failedReason;
+                                      
+                                      if([status isEqualToString:DUPLICATE]){
+                                      
+                                          failedReason = @"You have another login session on another device. Please logout it first.";
+                                          
+                                      }else if([status isEqualToString:LOGIN_FAIL] || [status isEqualToString:INVALID_USER]){
+                                          
+                                          failedReason = @"Incorrect user name or password.";
+                                      
+                                      }else{
+                                      
+                                          failedReason = @"Unknown reason";
+                                      }
+                    
+                                      [CCMiscHelper showAlertWithTitle:@"Login Failed" andMessage:failedReason];
                                       
                                   }
                               }else{
                                   
-                                  NSLog(@"Logged in faild, code: %ld", sentResult);
-                                  alert= [[UIAlertView alloc] initWithTitle:@"Login Message Sent Failed"
-                                                                    message:@"Please check the Internet connection"
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil];
+                                  [CCMiscHelper showConnectionFailedAlertWithSendResult:sentResult];
+                                  
                               }
                               
-                              [alert show];
-                              alert= nil;
+                              
                           });
                       }];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([segue.identifier isEqualToString:@"Login"]){
-        if([segue.destinationViewController isKindOfClass:[CCtestViewController class]]){
+        if([segue.destinationViewController isKindOfClass:[CCClassTableViewController class]]){
             
-            CCtestViewController *testVC = (CCtestViewController *)segue.destinationViewController;
-            //Whatever to do
+            CCClassTableViewController *classTVC = (CCClassTableViewController *)segue.destinationViewController;
+            classTVC.userID = self.userIDTextField.text;
             
         }
     }
@@ -107,15 +117,35 @@
     }
 }
 
+//Don't call this function directly. Call logout function in serverMC, since that function
+//will also handle cookie issue
 -(void)handleLogoutForControllers{
 
     NSLog(@"handleLogoutForControllers called");
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        //jump back to login page?
+        //if current view is not login page, pop to login page
+        if(![[CCMiscHelper getTopViewController] isMemberOfClass:[CCLoginViewController class]] ){
+            
+            [self dismissViewControllerAnimated:YES completion:^{
+            
+                [CCMiscHelper showAlertWithTitle:@"Logged out"
+                                      andMessage:@"You have been logged out."];
+                
+            }];
+            
+        }
+        
     });
 }
+
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    [self.serverMC logoutAndTriggerLogoutBlock:NO onCompletion:nil];
+}
+
 
 -(void)viewDidLoad{
     
@@ -134,10 +164,6 @@
     
     self.serverMC.logoutBlock = ^(){
         [weakSelf handleLogoutForControllers];
-    };
-    
-    self.serverMC.receivedRequestBlock=^(NSString *command, NSArray *arguments){
-        [weakSelf handleReceivedRequestWithCommand:command andArguments:arguments];
     };
  
 }

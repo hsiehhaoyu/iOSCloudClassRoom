@@ -18,6 +18,14 @@
 #define SERVER_URL_STRING @"localhost"
 #define SERVER_PORT_NUM 4119
 
+
+//====== S3 Server ==============
+#define S3_ACCESS_KEY @"AKIAJQAGTZZGZ6WIE3AQ"
+#define S3_SECRET_KEY @"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"
+#define BUCKET_NAME @"CloudClassRoom"
+//#define IMAGE_CONTENT_TYPE @"image/png"
+//#define TEXT_CONTENT_TYPE @"text/txt"
+
 //========== COMMANDS ===========
 //(Used by CCComunicationHandler)
 //1.	user sign up (create new account) → 先不管
@@ -34,8 +42,8 @@
 #define LIST_CLASS_REQ @"LIST_CLASS_REQ"
 #define LIST_CLASS_RES @"LIST_CLASS_RES"
 //6.	delete class (消除這個 user cluster)
-#define DEL_CLASS_REQ @"DEL_CLASS_REQ"
-#define DEL_CLASS_RES @"DEL_CLASS_RES"
+#define DEL_CLASS_REQ @"DELETE_CLASS_REQ"
+#define DEL_CLASS_RES @"DELETE_CLASS_RES"
 //7.	join class (讓 user 可以加入這個 cluster, permission control 也在這裡做)
 #define JOIN_CLASS_REQ @"JOIN_CLASS_REQ"
 #define JOIN_CLASS_RES @"JOIN_CLASS_RES"
@@ -69,6 +77,9 @@
 #define RETRIEVE_PRESENT_TOKEN_REQ @"RETRIEVE_PRESENT_TOKEN_REQ"
 #define RETRIEVE_PRESENT_TOKEN_IND @"RETRIEVE_PRESENT_TOKEN_IND"
 #define RETRIEVE_PRESENT_TOKEN_RES @"RETRIEVE_PRESENT_TOKEN_RES"
+//15.
+#define QUERY_LATEST_CONTENT_REQ @"QUERY_LATEST_CONTENT_REQ"
+#define QUERY_LATEST_CONTENT_RES @"QUERY_LATEST_CONTENT_RES"
 
 //================= STATUS ========================
 #define INVALID_USER @"INVALID_USER"
@@ -88,9 +99,13 @@
 #define NOT_IN_CLASS @"NOT_IN_CLASS"
 #define CONTENT_NOT_IN_CLASS @"CONTENT_NOT_IN_CLASS"
 #define ALREADY_PRESENTER @"ALREADY_PRESENTER"
+#define NO_CONTENT @"NO_CONTENT"
 
 //================ MISC ==========================
 //device type
-#define IOS @"IOS"
+#define IOS @"iOS"
+//content type (for our srever, not s3)
+#define IMAGE_TYPE @"image"
+#define TEXT_TYPE @"text"
 
 #endif

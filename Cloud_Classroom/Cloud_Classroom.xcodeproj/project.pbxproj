@@ -8,9 +8,27 @@
 
 /* Begin PBXBuildFile section */
 		5C2B938B1902B37700B85DD1 /* CCClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C2B938A1902B37700B85DD1 /* CCClass.m */; };
+		5C8FBC341910B0B0004200DE /* CCPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8FBC331910B0B0004200DE /* CCPictureViewController.m */; };
+		5C8FBC371910B0C6004200DE /* CCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8FBC361910B0C6004200DE /* CCTextViewController.m */; };
+		5C8FBC3A1910B6F0004200DE /* CCClassHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8FBC391910B6F0004200DE /* CCClassHelper.m */; };
+		5C8FBC481910FF75004200DE /* AWSAutoScaling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC3C1910FF75004200DE /* AWSAutoScaling.framework */; };
+		5C8FBC491910FF76004200DE /* AWSCloudWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC3D1910FF75004200DE /* AWSCloudWatch.framework */; };
+		5C8FBC4A1910FF76004200DE /* AWSDynamoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC3E1910FF75004200DE /* AWSDynamoDB.framework */; };
+		5C8FBC4B1910FF76004200DE /* AWSEC2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC3F1910FF75004200DE /* AWSEC2.framework */; };
+		5C8FBC4C1910FF76004200DE /* AWSElasticLoadBalancing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC401910FF75004200DE /* AWSElasticLoadBalancing.framework */; };
+		5C8FBC4D1910FF76004200DE /* AWSPersistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC411910FF75004200DE /* AWSPersistence.framework */; };
+		5C8FBC4E1910FF76004200DE /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC421910FF75004200DE /* AWSRuntime.framework */; };
+		5C8FBC4F1910FF76004200DE /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC431910FF75004200DE /* AWSS3.framework */; };
+		5C8FBC501910FF76004200DE /* AWSSecurityTokenService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC441910FF75004200DE /* AWSSecurityTokenService.framework */; };
+		5C8FBC511910FF76004200DE /* AWSSES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC451910FF75004200DE /* AWSSES.framework */; };
+		5C8FBC521910FF76004200DE /* AWSSimpleDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC461910FF75004200DE /* AWSSimpleDB.framework */; };
+		5C8FBC531910FF76004200DE /* AWSSNS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC471910FF75004200DE /* AWSSNS.framework */; };
+		5C8FBC551910FF9E004200DE /* AWSSQS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC541910FF9E004200DE /* AWSSQS.framework */; };
+		5C8FBCCF191149C4004200DE /* CCS3ServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8FBCCE191149C4004200DE /* CCS3ServerManager.m */; };
+		5C8FBCD31912BBDE004200DE /* NoSlideAvailable.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5C8FBCD21912BBDE004200DE /* NoSlideAvailable.jpg */; };
 		5CA36E701900BC370069A1BA /* CCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA36E6F1900BC370069A1BA /* CCMessage.m */; };
 		5CA36E731900BCF00069A1BA /* CCMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA36E721900BCF00069A1BA /* CCMessageQueue.m */; };
-		5CA4953119037B330007FD28 /* CCtestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA4953019037B330007FD28 /* CCtestViewController.m */; };
+		5CA98F1A190908D400776C32 /* CCClassTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA98F19190908D400776C32 /* CCClassTableViewController.m */; };
 		5CB294E218F61F2700A2AB45 /* CCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CB294E118F61F2700A2AB45 /* CCLoginViewController.m */; };
 		5CB294E918F63A6600A2AB45 /* CCCommunicationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CB294E818F63A6600A2AB45 /* CCCommunicationHandler.m */; };
 		5CC8221F1901FA3B00E3507E /* CCMessageCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC8221E1901FA3B00E3507E /* CCMessageCenter.m */; };
@@ -28,6 +46,9 @@
 		5CD631E418F4DF9200FF29F0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5CD631E218F4DF9200FF29F0 /* InfoPlist.strings */; };
 		5CD631E618F4DF9200FF29F0 /* Cloud_ClassroomTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CD631E518F4DF9200FF29F0 /* Cloud_ClassroomTests.m */; };
 		5CD631F318F4E07700FF29F0 /* CCTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CD631F218F4E07700FF29F0 /* CCTCPConnection.m */; };
+		5CE7B5931909358C0055E381 /* CCMiscHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE7B5921909358C0055E381 /* CCMiscHelper.m */; };
+		5CE7B596190942B00055E381 /* CCClassTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE7B595190942B00055E381 /* CCClassTabBarController.m */; };
+		5CE7B59919095AE00055E381 /* CCStudentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE7B59819095AE00055E381 /* CCStudentTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,12 +64,34 @@
 /* Begin PBXFileReference section */
 		5C2B93891902B37700B85DD1 /* CCClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCClass.h; sourceTree = "<group>"; };
 		5C2B938A1902B37700B85DD1 /* CCClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCClass.m; sourceTree = "<group>"; };
+		5C8FBC321910B0B0004200DE /* CCPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCPictureViewController.h; sourceTree = "<group>"; };
+		5C8FBC331910B0B0004200DE /* CCPictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCPictureViewController.m; sourceTree = "<group>"; };
+		5C8FBC351910B0C6004200DE /* CCTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTextViewController.h; sourceTree = "<group>"; };
+		5C8FBC361910B0C6004200DE /* CCTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTextViewController.m; sourceTree = "<group>"; };
+		5C8FBC381910B6F0004200DE /* CCClassHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCClassHelper.h; sourceTree = "<group>"; };
+		5C8FBC391910B6F0004200DE /* CCClassHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCClassHelper.m; sourceTree = "<group>"; };
+		5C8FBC3C1910FF75004200DE /* AWSAutoScaling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSAutoScaling.framework; sourceTree = "<group>"; };
+		5C8FBC3D1910FF75004200DE /* AWSCloudWatch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSCloudWatch.framework; sourceTree = "<group>"; };
+		5C8FBC3E1910FF75004200DE /* AWSDynamoDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSDynamoDB.framework; sourceTree = "<group>"; };
+		5C8FBC3F1910FF75004200DE /* AWSEC2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSEC2.framework; sourceTree = "<group>"; };
+		5C8FBC401910FF75004200DE /* AWSElasticLoadBalancing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSElasticLoadBalancing.framework; sourceTree = "<group>"; };
+		5C8FBC411910FF75004200DE /* AWSPersistence.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSPersistence.framework; sourceTree = "<group>"; };
+		5C8FBC421910FF75004200DE /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
+		5C8FBC431910FF75004200DE /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
+		5C8FBC441910FF75004200DE /* AWSSecurityTokenService.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSSecurityTokenService.framework; sourceTree = "<group>"; };
+		5C8FBC451910FF75004200DE /* AWSSES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSSES.framework; sourceTree = "<group>"; };
+		5C8FBC461910FF75004200DE /* AWSSimpleDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSSimpleDB.framework; sourceTree = "<group>"; };
+		5C8FBC471910FF75004200DE /* AWSSNS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSSNS.framework; sourceTree = "<group>"; };
+		5C8FBC541910FF9E004200DE /* AWSSQS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSSQS.framework; sourceTree = "<group>"; };
+		5C8FBCCD191149C4004200DE /* CCS3ServerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCS3ServerManager.h; sourceTree = "<group>"; };
+		5C8FBCCE191149C4004200DE /* CCS3ServerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCS3ServerManager.m; sourceTree = "<group>"; };
+		5C8FBCD21912BBDE004200DE /* NoSlideAvailable.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = NoSlideAvailable.jpg; sourceTree = "<group>"; };
 		5CA36E6E1900BC370069A1BA /* CCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMessage.h; sourceTree = "<group>"; };
 		5CA36E6F1900BC370069A1BA /* CCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMessage.m; sourceTree = "<group>"; };
 		5CA36E711900BCF00069A1BA /* CCMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMessageQueue.h; sourceTree = "<group>"; };
 		5CA36E721900BCF00069A1BA /* CCMessageQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMessageQueue.m; sourceTree = "<group>"; };
-		5CA4952F19037B330007FD28 /* CCtestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCtestViewController.h; sourceTree = "<group>"; };
-		5CA4953019037B330007FD28 /* CCtestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCtestViewController.m; sourceTree = "<group>"; };
+		5CA98F18190908D400776C32 /* CCClassTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCClassTableViewController.h; sourceTree = "<group>"; };
+		5CA98F19190908D400776C32 /* CCClassTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCClassTableViewController.m; sourceTree = "<group>"; };
 		5CB294E018F61F2700A2AB45 /* CCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLoginViewController.h; sourceTree = "<group>"; };
 		5CB294E118F61F2700A2AB45 /* CCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLoginViewController.m; sourceTree = "<group>"; };
 		5CB294E618F6383800A2AB45 /* CCConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCConfiguration.h; sourceTree = "<group>"; };
@@ -75,6 +118,12 @@
 		5CD631E518F4DF9200FF29F0 /* Cloud_ClassroomTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cloud_ClassroomTests.m; sourceTree = "<group>"; };
 		5CD631F118F4E07700FF29F0 /* CCTCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTCPConnection.h; sourceTree = "<group>"; };
 		5CD631F218F4E07700FF29F0 /* CCTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTCPConnection.m; sourceTree = "<group>"; };
+		5CE7B5911909358C0055E381 /* CCMiscHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMiscHelper.h; sourceTree = "<group>"; };
+		5CE7B5921909358C0055E381 /* CCMiscHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMiscHelper.m; sourceTree = "<group>"; };
+		5CE7B594190942B00055E381 /* CCClassTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCClassTabBarController.h; sourceTree = "<group>"; };
+		5CE7B595190942B00055E381 /* CCClassTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCClassTabBarController.m; sourceTree = "<group>"; };
+		5CE7B59719095AE00055E381 /* CCStudentTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCStudentTableViewController.h; sourceTree = "<group>"; };
+		5CE7B59819095AE00055E381 /* CCStudentTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCStudentTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,9 +131,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C8FBC491910FF76004200DE /* AWSCloudWatch.framework in Frameworks */,
+				5C8FBC531910FF76004200DE /* AWSSNS.framework in Frameworks */,
 				5CD631BD18F4DF9100FF29F0 /* CoreGraphics.framework in Frameworks */,
+				5C8FBC501910FF76004200DE /* AWSSecurityTokenService.framework in Frameworks */,
+				5C8FBC4D1910FF76004200DE /* AWSPersistence.framework in Frameworks */,
+				5C8FBC4E1910FF76004200DE /* AWSRuntime.framework in Frameworks */,
+				5C8FBC4B1910FF76004200DE /* AWSEC2.framework in Frameworks */,
+				5C8FBC481910FF75004200DE /* AWSAutoScaling.framework in Frameworks */,
+				5C8FBC4F1910FF76004200DE /* AWSS3.framework in Frameworks */,
+				5C8FBC521910FF76004200DE /* AWSSimpleDB.framework in Frameworks */,
+				5C8FBC4C1910FF76004200DE /* AWSElasticLoadBalancing.framework in Frameworks */,
 				5CD631BF18F4DF9100FF29F0 /* UIKit.framework in Frameworks */,
+				5C8FBC4A1910FF76004200DE /* AWSDynamoDB.framework in Frameworks */,
 				5CD631BB18F4DF9100FF29F0 /* Foundation.framework in Frameworks */,
+				5C8FBC551910FF9E004200DE /* AWSSQS.framework in Frameworks */,
+				5C8FBC511910FF76004200DE /* AWSSES.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,6 +163,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5C8FBC3B1910FF51004200DE /* AWS */ = {
+			isa = PBXGroup;
+			children = (
+				5C8FBC541910FF9E004200DE /* AWSSQS.framework */,
+				5C8FBC3C1910FF75004200DE /* AWSAutoScaling.framework */,
+				5C8FBC3D1910FF75004200DE /* AWSCloudWatch.framework */,
+				5C8FBC3E1910FF75004200DE /* AWSDynamoDB.framework */,
+				5C8FBC3F1910FF75004200DE /* AWSEC2.framework */,
+				5C8FBC401910FF75004200DE /* AWSElasticLoadBalancing.framework */,
+				5C8FBC411910FF75004200DE /* AWSPersistence.framework */,
+				5C8FBC421910FF75004200DE /* AWSRuntime.framework */,
+				5C8FBC431910FF75004200DE /* AWSS3.framework */,
+				5C8FBC441910FF75004200DE /* AWSSecurityTokenService.framework */,
+				5C8FBC451910FF75004200DE /* AWSSES.framework */,
+				5C8FBC461910FF75004200DE /* AWSSimpleDB.framework */,
+				5C8FBC471910FF75004200DE /* AWSSNS.framework */,
+			);
+			name = AWS;
+			sourceTree = "<group>";
+		};
+		5C8FBCD41912BBE5004200DE /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				5C8FBCD21912BBDE004200DE /* NoSlideAvailable.jpg */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		5CA4952E190328470007FD28 /* Unit */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,6 +226,7 @@
 		5CD631B918F4DF9100FF29F0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5C8FBC3B1910FF51004200DE /* AWS */,
 				5CD631BA18F4DF9100FF29F0 /* Foundation.framework */,
 				5CD631BC18F4DF9100FF29F0 /* CoreGraphics.framework */,
 				5CD631BE18F4DF9100FF29F0 /* UIKit.framework */,
@@ -153,6 +244,7 @@
 				5CD631F418F4E08600FF29F0 /* Tools */,
 				5CD631EF18F4DFAE00FF29F0 /* Controllers */,
 				5CD631D218F4DF9200FF29F0 /* Images.xcassets */,
+				5C8FBCD41912BBE5004200DE /* Images */,
 				5CD631C118F4DF9100FF29F0 /* Supporting Files */,
 			);
 			path = Cloud_Classroom;
@@ -192,10 +284,18 @@
 		5CD631EF18F4DFAE00FF29F0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				5C8FBC321910B0B0004200DE /* CCPictureViewController.h */,
+				5C8FBC331910B0B0004200DE /* CCPictureViewController.m */,
+				5C8FBC351910B0C6004200DE /* CCTextViewController.h */,
+				5C8FBC361910B0C6004200DE /* CCTextViewController.m */,
+				5CE7B59719095AE00055E381 /* CCStudentTableViewController.h */,
+				5CE7B59819095AE00055E381 /* CCStudentTableViewController.m */,
+				5CE7B594190942B00055E381 /* CCClassTabBarController.h */,
+				5CE7B595190942B00055E381 /* CCClassTabBarController.m */,
+				5CA98F18190908D400776C32 /* CCClassTableViewController.h */,
+				5CA98F19190908D400776C32 /* CCClassTableViewController.m */,
 				5CB294E018F61F2700A2AB45 /* CCLoginViewController.h */,
 				5CB294E118F61F2700A2AB45 /* CCLoginViewController.m */,
-				5CA4952F19037B330007FD28 /* CCtestViewController.h */,
-				5CA4953019037B330007FD28 /* CCtestViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -203,6 +303,12 @@
 		5CD631F418F4E08600FF29F0 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				5C8FBCCD191149C4004200DE /* CCS3ServerManager.h */,
+				5C8FBCCE191149C4004200DE /* CCS3ServerManager.m */,
+				5CE7B5911909358C0055E381 /* CCMiscHelper.h */,
+				5CE7B5921909358C0055E381 /* CCMiscHelper.m */,
+				5C8FBC381910B6F0004200DE /* CCClassHelper.h */,
+				5C8FBC391910B6F0004200DE /* CCClassHelper.m */,
 				5CC8221D1901FA3B00E3507E /* CCMessageCenter.h */,
 				5CC8221E1901FA3B00E3507E /* CCMessageCenter.m */,
 				5CB294E718F63A6600A2AB45 /* CCCommunicationHandler.h */,
@@ -261,6 +367,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Hao-Yu Hsieh";
 				TargetAttributes = {
+					5CD631B618F4DF9100FF29F0 = {
+						DevelopmentTeam = D5G7A73C8V;
+					};
 					5CD631D718F4DF9200FF29F0 = {
 						TestTargetID = 5CD631B618F4DF9100FF29F0;
 					};
@@ -292,6 +401,7 @@
 			files = (
 				5CD631D318F4DF9200FF29F0 /* Images.xcassets in Resources */,
 				5CD631C518F4DF9200FF29F0 /* InfoPlist.strings in Resources */,
+				5C8FBCD31912BBDE004200DE /* NoSlideAvailable.jpg in Resources */,
 				5CD631CE18F4DF9200FF29F0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,9 +423,16 @@
 			files = (
 				5CC8221F1901FA3B00E3507E /* CCMessageCenter.m in Sources */,
 				5CB294E218F61F2700A2AB45 /* CCLoginViewController.m in Sources */,
-				5CA4953119037B330007FD28 /* CCtestViewController.m in Sources */,
+				5CE7B5931909358C0055E381 /* CCMiscHelper.m in Sources */,
 				5CA36E701900BC370069A1BA /* CCMessage.m in Sources */,
+				5CA98F1A190908D400776C32 /* CCClassTableViewController.m in Sources */,
+				5CE7B59919095AE00055E381 /* CCStudentTableViewController.m in Sources */,
+				5C8FBC3A1910B6F0004200DE /* CCClassHelper.m in Sources */,
 				5CD631CB18F4DF9200FF29F0 /* CCAppDelegate.m in Sources */,
+				5C8FBC341910B0B0004200DE /* CCPictureViewController.m in Sources */,
+				5CE7B596190942B00055E381 /* CCClassTabBarController.m in Sources */,
+				5C8FBCCF191149C4004200DE /* CCS3ServerManager.m in Sources */,
+				5C8FBC371910B0C6004200DE /* CCTextViewController.m in Sources */,
 				5CA36E731900BCF00069A1BA /* CCMessageQueue.m in Sources */,
 				5C2B938B1902B37700B85DD1 /* CCClass.m in Sources */,
 				5CD631F318F4E07700FF29F0 /* CCTCPConnection.m in Sources */,
@@ -445,10 +562,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cloud_Classroom/Cloud_Classroom-Prefix.pch";
 				INFOPLIST_FILE = "Cloud_Classroom/Cloud_Classroom-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -458,10 +582,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cloud_Classroom/Cloud_Classroom-Prefix.pch";
 				INFOPLIST_FILE = "Cloud_Classroom/Cloud_Classroom-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

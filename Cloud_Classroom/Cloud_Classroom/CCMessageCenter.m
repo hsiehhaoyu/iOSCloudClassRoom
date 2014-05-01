@@ -25,6 +25,8 @@
 //Used to store sent messages so that it can be retreived when receiving corresponding response
 @property (strong,atomic) NSMutableArray *sentMessages; //of CCMessages
 
+@property (strong,atomic) NSString *tokenOfAPN;
+
 @end
 
 @implementation CCMessageCenter
@@ -81,13 +83,19 @@
         return;
     }
     
+#warning Change in the future
+    if(!self.tokenOfAPN){
+        NSLog(@"toeken Of APN is unset. Will set it to empty string now");
+        self.tokenOfAPN = @"";
+    }
+    
     if(self.isLoggedIn){
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
     }
     
     CCMessage *message = [[CCMessage alloc]
                           initWithCommand:LOGIN_REQ
-                          andArguments:@[userID,password] //add deviceType at the end if server fixed. (only here)
+                          andArguments:@[userID, password, deviceType, self.tokenOfAPN]
                           andSendCompletionBlock:^(SendMessageResult result) {
                               
                               if (result != SendMessageResultSucceeded) {
@@ -102,12 +110,12 @@
                               
                           }
                           andReceiveResponseBlock:^(NSString *command, NSArray *arguments) {
-        
+                              //p.s. we don't use 'role' info, which is arg[2], for now
+                              
                               if([command isEqualToString:LOGIN_RES]){
                                   
-                                  //Both LOGGED_IN and DUIPLICATE are treated as loggedin
-                                  if([arguments[0] isEqualToString:LOGGED_IN] ||
-                                     [arguments[0] isEqualToString:DUPLICATE]){
+                                  //logged in or not
+                                  if([arguments[0] isEqualToString:LOGGED_IN]){
                                       
                                       self.cookieID = arguments[1];
                                       
@@ -130,7 +138,14 @@
 //affect the result in our case
 //Therefore completion can be nil here
 //This can be called even if you're not logged in. Perfectly legal.
--(void)logoutAndOnCompletion:(void (^)(SendMessageResult, NSString *))completion{
+//triggerLogoutBlock indicate whether you want to execute the
+//block which assigned to logoutBlock, which is generally a block
+//controlling logout logic in ViewController. Therefore, if this
+//is called from ViewController, this value should be NO (or might
+//trigger recursive call if you call this in View Did Appear in
+//Login Page. Otherwise, should be YES if is called
+//inside this module.
+-(void)logoutAndTriggerLogoutBlock:(BOOL)triggerLogoutBlock onCompletion:(void (^)(SendMessageResult, NSString *))completion{
     
     if(!self.isLoggedIn){
         NSLog(@"Not logged in while trying to logout");
@@ -174,12 +189,16 @@
         
     }
     
+    //Avoid calling an not existing block or retaining the block in
+    //the ViewController that should disappear
+    [self setAllBlocksToNilExceptLogoutBlock];
+    
     //Since not only when user click logout but also when encountered
     //an error state will this function be executed, this logoutBlock
     //is important to clean all memorized stuffs in controller/model
     //and go back to login page. Therefore, a purpose of this logoutBlock
     //is that program can be recovered from error state
-    if(self.logoutBlock)
+    if(self.logoutBlock && triggerLogoutBlock)
         self.logoutBlock();
 }
 
@@ -195,7 +214,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while createClass. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
 
@@ -243,7 +262,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while respond to change presenter. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
     
@@ -274,7 +293,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while list class. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
     
@@ -344,7 +363,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while delete class. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
     
@@ -377,7 +396,8 @@
 }
 
 -(void)joinClassWithClassID:(NSString *)classID
-               onCompletion:(void (^)(SendMessageResult, NSString *))completion{
+               onCompletion:(void (^)(SendMessageResult, NSString *,
+                                      NSString *, NSString *))completion{
 
     if(!completion || !classID){
         NSLog(@"Parameters can't be nil. join class abort.");
@@ -388,7 +408,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while join class. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
     
@@ -399,7 +419,7 @@
                               if (result != SendMessageResultSucceeded) {
                                   
                                   NSLog(@"try to send join class message failed, code: %ld", result);
-                                  completion(result, nil);
+                                  completion(result, nil, nil, nil);
                                   
                               }
                               
@@ -410,8 +430,16 @@
                           andReceiveResponseBlock:^(NSString *command, NSArray *arguments) {
                               if(![command isEqualToString:JOIN_CLASS_RES]){
                                   NSLog(@"Error! Invoked incorrect sent message for JOIN_CLASS_REQ, command: %@", command);
+                              }else if(![arguments[0] isEqualToString:classID]){
+                                  NSLog(@"Error! JOIN_CLASS_RES invoked incorrect JOIN_CLASS_REQ. Request classID: %@, received classID: %@",
+                                        classID, arguments[0]);
                               }else{
-                                  completion(SendMessageResultSucceeded, arguments[0]);
+                                  
+#warning Change this when finished
+                                  //DEBUG(change to following line after finish)
+                                  completion(SendMessageResultSucceeded, SUCCESS, arguments[0], arguments[1]);
+                                   
+                                  //completion(SendMessageResultSucceeded, arguments[2], arguments[0], arguments[1]);
                               }
                               
                           }];
@@ -433,7 +461,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while query class info. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
     
@@ -495,7 +523,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while quit class. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
     
@@ -542,7 +570,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while kick student. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
     
@@ -575,8 +603,58 @@
 
 }
 
+//Could use this as template for addtional general request-response message
+-(void)pushContentWithClassID:(NSString *)classID
+                 andContentID:(NSString *)contentID
+               andContentType:(NSString *)contentType
+                 onCompletion:(void (^)(SendMessageResult, NSString *))completion{
+    
+    if(!completion || !classID || !contentID || !contentType){
+        NSLog(@"Parameters can't be nil. push content abort.");
+        return;
+    }
+    
+    if(!self.isLoggedIn){
+        //I don't raise exception here, so that program can be recovered from error
+        //state after exec logout
+        NSLog(@"Error! Not logged in while pushing content. Force to execute logout");
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
+        return;
+    }
+    
+    CCMessage *message = [[CCMessage alloc]
+                          initWithCommand:PUSH_CONTENT_REQ
+                          andArguments:@[self.cookieID, classID, contentID, contentType] //Don't forget cookieID
+                          andSendCompletionBlock:^(SendMessageResult result) {
+                              if (result != SendMessageResultSucceeded) {
+                                  
+                                  NSLog(@"try to send create class message failed, code: %ld", result);
+                                  completion(result, nil);
+                                  
+                              }
+                              
+                              //For success case, no need to do anything now, until server
+                              //send response back
+                              
+                          }
+                          andReceiveResponseBlock:^(NSString *command, NSArray *arguments) {
+                              if(![command isEqualToString:PUSH_CONTENT_RES]){
+                                  NSLog(@"Error! Invoked incorrect sent message for PUSH_CONTENT_REQ, command: %@", command);
+                              }else{
+                                  completion(SendMessageResultSucceeded, arguments[0]);
+                              }
+                              
+                          }];
+    
+    [self processReadyToSendMessage:message expectAResponse:YES];
+    
+    
+}
+
+
 -(void)getPresentTokenWithClassID:(NSString *)classID
-                     onCompletion:(void (^)(SendMessageResult, NSString *))completion{
+                     onCompletion:(void (^)(SendMessageResult, NSString *,
+                                            NSString *, NSString *))completion{
 
     if(!completion || !classID){
         NSLog(@"Parameters can't be nil. getPresentToken abort.");
@@ -587,7 +665,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while getPresentToken. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
     
@@ -598,7 +676,7 @@
                               if (result != SendMessageResultSucceeded) {
                                   
                                   NSLog(@"try to send getPresentToken message failed, code: %ld", result);
-                                  completion(result, nil);
+                                  completion(result, nil, nil, nil);
                                   
                               }
                               
@@ -609,8 +687,11 @@
                           andReceiveResponseBlock:^(NSString *command, NSArray *arguments) {
                               if(![command isEqualToString:GET_PRESENT_TOKEN_RES]){
                                   NSLog(@"Error! Invoked incorrect sent message for GET_PRESENT_TOKEN_REQ, command: %@", command);
+                              }else if(![arguments[0] isEqualToString:classID]){
+                                  NSLog(@"Error! GET_PRESENT_TOKEN_RES invoked incorrect GET_PRESENT_TOKEN_REQ. Request classID: %@, received classID: %@",
+                                        classID, arguments[0]);
                               }else{
-                                  completion(SendMessageResultSucceeded, arguments[0]);
+                                  completion(SendMessageResultSucceeded, arguments[2], arguments[0], arguments[1]);
                               }
                               
                           }];
@@ -633,7 +714,7 @@
         //I don't raise exception here, so that program can be recovered from error
         //state after exec logout
         NSLog(@"Error! Not logged in while retrievePresentToken. Force to execute logout");
-        [self logoutAndOnCompletion:nil];
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
         return;
     }
     
@@ -667,6 +748,98 @@
 
 }
 
+-(void)queryLatestContentWithClassID:(NSString *)classID
+                        onCompletion:(void (^)(SendMessageResult,
+                                               NSString *, NSString *,
+                                               NSString *))completion{
+    
+    if(!completion || !classID){
+        NSLog(@"Parameters can't be nil. query latest content abort.");
+        return;
+    }
+    
+    if(!self.isLoggedIn){
+        //I don't raise exception here, so that program can be recovered from error
+        //state after exec logout
+        NSLog(@"Error! Not logged in while createClass. Force to execute logout");
+        [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
+        return;
+    }
+    
+    CCMessage *message = [[CCMessage alloc]
+                          initWithCommand:QUERY_LATEST_CONTENT_REQ
+                          andArguments:@[self.cookieID, classID] //Don't forget cookieID
+                          andSendCompletionBlock:^(SendMessageResult result) {
+                              if (result != SendMessageResultSucceeded) {
+                                  
+                                  NSLog(@"try to send create class message failed, code: %ld", result);
+                                  completion(result, nil, nil, nil);
+                                  
+                              }
+                              
+                              //For success case, no need to do anything now, until server
+                              //send response back
+                              
+                          }
+                          andReceiveResponseBlock:^(NSString *command, NSArray *arguments) {
+                              if(![command isEqualToString:QUERY_LATEST_CONTENT_RES]){
+                                  NSLog(@"Error! Invoked incorrect sent message for QUERY_LATEST_CONTENT_REQ, command: %@", command);
+                              }else{
+                                  completion(SendMessageResultSucceeded, arguments[0], arguments[1], arguments[2]);
+                              }
+                              
+                          }];
+    
+    [self processReadyToSendMessage:message expectAResponse:YES];
+    
+    
+}
+
+
+//
+-(void)setAllBlocksToNilExceptLogoutBlock{
+    //self.receivedChangePresentTokenIndBlock = nil;
+    self.receivedChangePresentTokenReqBlock = nil;
+    //self.receivedCondPushContentGetNotifyBlock = nil;
+    self.receivedKickUserIndBlock = nil;
+    self.receivedPushContentNotifyBlock = nil;
+    self.receivedRetrievePresentTokenIndBlock = nil;
+}
+
+//process received messages that is not a respond to a request we sent
+-(void)receivedIndependentMessageWithCommand:(NSString *)command andArguments:(NSArray *)arguments{
+
+    if([command isEqualToString:KICK_USER_IND]){
+        
+        if(self.receivedKickUserIndBlock)
+            self.receivedKickUserIndBlock(arguments[0],arguments[1], arguments[2]);
+        
+    }else if([command isEqualToString:PUSH_CONTENT_NOTIFY]){
+        
+        if(self.receivedPushContentNotifyBlock)
+            self.receivedPushContentNotifyBlock(arguments[0], arguments[1]);
+    
+    //}else if([command isEqualToString:COND_PUSH_CONTENT_GET_NOTIFY]){
+    
+    }else if([command isEqualToString:CHANGE_PRESENT_TOKEN_REQ]){
+        
+        if(self.receivedChangePresentTokenReqBlock)
+            self.receivedChangePresentTokenReqBlock(arguments[0],arguments[1]);
+    
+    //}else if([command isEqualToString:CHANGE_PRESENT_TOKEN_IND]){
+    
+    }else if([command isEqualToString:RETRIEVE_PRESENT_TOKEN_IND]){
+        
+        if(self.receivedRetrievePresentTokenIndBlock)
+            self.receivedRetrievePresentTokenIndBlock(arguments[0], arguments[1]);
+    
+    }else{
+    
+        NSLog(@"Received an independent message but no corresponding handler. Discard it");
+        return;
+    }
+}
+
 -(void)processReceivedMessage:(NSArray *)receivedMessage{
 
     NSString *command = receivedMessage[0];
@@ -681,9 +854,8 @@
     
     if(commandInfo[0] == [NSNull null]){ //is a indepenent message
     
-        if(self.receivedRequestBlock)
-            self.receivedRequestBlock(command, arguments);
-    
+        [self receivedIndependentMessageWithCommand:command andArguments:arguments];
+            
     }else{ //is a response of a request we sent
     
         CCMessage *requestMessage = [self getCorrespondingRequestForResponseWithCommand:command
@@ -701,7 +873,7 @@
     //if has STATUS and is NOT_LOGIN, execute logout action
     if(commandInfo[2] != [NSNull null]){
         if([[arguments objectAtIndex:[(NSNumber *)commandInfo[2] integerValue]] isEqualToString:NOT_LOGIN])
-            [self logoutAndOnCompletion:nil];
+            [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
     }
 
 
@@ -833,26 +1005,27 @@
          */
         commandInfoDictionary = @{
                         
-                 LOGIN_RES  : @[LOGIN_REQ, [NSNumber numberWithInteger:2], [NSNumber numberWithInteger:0]],
+                 LOGIN_RES  : @[LOGIN_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:0]],
                  LOGOUT_RES : @[LOGOUT_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
                  CREATE_CLASS_RES : @[CREATE_CLASS_REQ, [NSNumber numberWithInteger:2], [NSNumber numberWithInteger:0]],
                  LIST_CLASS_RES : @[LIST_CLASS_REQ, nothing, [NSNumber numberWithInteger:0]],
                  DEL_CLASS_RES : @[DEL_CLASS_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 JOIN_CLASS_RES : @[JOIN_CLASS_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
+                 JOIN_CLASS_RES : @[JOIN_CLASS_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:2]],
                  QUERY_CLASS_INFO_RES : @[QUERY_CLASS_INFO_REQ, nothing, [NSNumber numberWithInteger:0]],
                  QUIT_CLASS_RES : @[QUIT_CLASS_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
                  KICK_USER_RES : @[KICK_USER_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 KICK_USER_IND : @[nothing, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
+                 KICK_USER_IND : @[nothing, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:0]],
                  PUSH_CONTENT_RES : @[PUSH_CONTENT_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
                  PUSH_CONTENT_NOTIFY : @[nothing, [NSNumber numberWithInteger:2], nothing],
                  PUSH_CONTENT_GET_RES : @[PUSH_CONTENT_GET_REQ, [NSNumber numberWithInteger:5], [NSNumber numberWithInteger:0]],
                  COND_PUSH_CONTENT_RES : @[COND_PUSH_CONTENT_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
                  COND_PUSH_CONTENT_GET_NOTIFY : @[nothing, [NSNumber numberWithInteger:2], nothing],
                  CHANGE_PRESENT_TOKEN_REQ : @[nothing, [NSNumber numberWithInteger:2], nothing],
-                 GET_PRESENT_TOKEN_RES : @[GET_PRESENT_TOKEN_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
+                 GET_PRESENT_TOKEN_RES : @[GET_PRESENT_TOKEN_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:2]],
                  CHANGE_PRESENT_TOKEN_IND : @[nothing, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 RETRIEVE_PRESENT_TOKEN_IND : @[nothing, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 RETRIEVE_PRESENT_TOKEN_RES : @[RETRIEVE_PRESENT_TOKEN_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]]
+                 RETRIEVE_PRESENT_TOKEN_IND : @[nothing, [NSNumber numberWithInteger:2], nothing],
+                 RETRIEVE_PRESENT_TOKEN_RES : @[RETRIEVE_PRESENT_TOKEN_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
+                 QUERY_LATEST_CONTENT_RES : @[QUERY_LATEST_CONTENT_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:0]]
                  
                  };
     });

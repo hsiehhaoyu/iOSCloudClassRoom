@@ -146,7 +146,7 @@
     
     }else{
     
-        NSData *data = [[NSData alloc] initWithData:[string dataUsingEncoding:NSASCIIStringEncoding]];
+        NSData *data = [string dataUsingEncoding:NSASCIIStringEncoding];
         
         [self sendData:data onCompletion:^(SendDataResult result) {
             completion(result);

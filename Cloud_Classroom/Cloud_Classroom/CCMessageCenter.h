@@ -12,7 +12,8 @@
 
 @interface CCMessageCenter : NSObject
 
-//Blocks
+//====== Blocks ==========
+
 //What to do after logout
 //Since not only when user click logout but also when encountered
 //an error state will logout function be executed, this logoutBlock
@@ -20,17 +21,26 @@
 //and go back to login page. Therefore, a purpose of this logoutBlock
 //is that program can be recovered from error state.
 @property (strong,atomic) void (^logoutBlock)();
-//What to do if receive a message from server that is not a response for a request we sent
-@property (strong,atomic) void (^receivedRequestBlock)(NSString *command, NSArray *arguments);
 
+//What to do if receive a message from server that is not a response for a request we sent
+@property (strong,atomic) void (^receivedKickUserIndBlock)(NSString *status,NSString *classId,NSString *className);
+@property (strong,atomic) void (^receivedPushContentNotifyBlock)(NSString *classID,NSString *contentID);
+//@property (strong,atomic) void (^receivedCondPushContentGetNotifyBlock)(NSString *command, NSArray *arguments);
+@property (strong,atomic) void (^receivedChangePresentTokenReqBlock)(NSString *studentName,NSString *classID);
+//@property (strong,atomic) void (^receivedChangePresentTokenIndBlock)(NSString *command, NSArray *arguments);
+@property (strong,atomic) void (^receivedRetrievePresentTokenIndBlock)(NSString *classID, NSString *className);
+
+//indicate whether is logged in now
 @property (nonatomic,readonly) BOOL isLoggedIn;
 
+//===== Send request-response messages
 -(void)loginWithUserID:(NSString *)userID
            andPassword:(NSString *)password
          andDeviceType:(NSString *)deviceType
           onCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
 
--(void)logoutAndOnCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
+-(void)logoutAndTriggerLogoutBlock:(BOOL)triggerLogoutBlock
+                      onCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
 
 -(void)createClassWithName:(NSString *)className
               onCompletion:(void (^)(SendMessageResult sentResult, NSString *status,
@@ -44,7 +54,8 @@
                  onCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
 
 -(void)joinClassWithClassID:(NSString *)classID
-               onCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
+               onCompletion:(void (^)(SendMessageResult sentResult, NSString *status,
+                                      NSString *classID, NSString *className))completion;
 
 -(void)queryClassInfoWithClassID:(NSString *)classID
                     onCompletion:(void (^)(SendMessageResult sentResult, NSString *status,
@@ -63,32 +74,43 @@
 -(void)pushContentWithClassID:(NSString *)classID
                  andContentID:(NSString *)contentID
                andContentType:(NSString *)contentType
-                andNumOfBytes:(NSInteger)numOfBytes
-               andContentData:(NSData *)contentData
                  onCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
 
+//
+//-(void)getPushedContentWithClassID:(NSString *)classID
+//                      andContentID:(NSString *)contentID
+//                      onCompletion:(void (^)(SendMessageResult sentResult, NSString *status,
+//                                             NSString *contentID, NSString *contentType,
+//                                             NSInteger numOfBytes, NSData *contentData))completion;
 
--(void)getPushedContentWithClassID:(NSString *)classID
-                      andContentID:(NSString *)contentID
-                      onCompletion:(void (^)(SendMessageResult sentResult, NSString *status,
-                                             NSString *contentID, NSString *contentType,
-                                             NSInteger numOfBytes, NSData *contentData))completion;
-
--(void)conditionalPushContentWithClassID:(NSString *)classID
-                            andContentID:(NSString *)contentID
-                            onCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
-
+//-(void)conditionalPushContentWithClassID:(NSString *)classID
+//                            andContentID:(NSString *)contentID
+//                            onCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
+//
 
 -(void)getPresentTokenWithClassID:(NSString *)classID
-                     onCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
+                     onCompletion:(void (^)(SendMessageResult sentResult, NSString *status,
+                                            NSString *classID, NSString *className))completion;
+
 
 
 -(void)retrievePresentTokenWithClassID:(NSString *)classID
                           onCompletion:(void (^)(SendMessageResult sentResult, NSString *status))completion;
 
+-(void)queryLatestContentWithClassID:(NSString *)classID
+                        onCompletion:(void (^)(SendMessageResult sentResult,
+                                               NSString *status,
+                                               NSString *classID,
+                                               NSString *contentID))completion;
+
+//======= Send one way messages (will have no response) ==================
 -(void)respondToChangePresenterWithClassID:(NSString *)classID
                        andNewPresenterName:(NSString *)newPresenter
                                andDecision:(NSString *)decision
                               onCompletion:(void (^)(SendMessageResult sentResult))completion;
+
+//======= Others ==========
+-(void)setAllBlocksToNilExceptLogoutBlock;
+
 
 @end
