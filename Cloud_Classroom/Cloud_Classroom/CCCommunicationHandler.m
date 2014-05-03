@@ -16,10 +16,12 @@
 
 @property (strong,atomic) CCTCPConnection *serverConnection;
 
-
+@property (strong,atomic) NSMutableArray *unfinishedMessage;
 
 //Message queue
 @property (strong,atomic) CCMessageQueue *queue;
+
+@property (atomic) BOOL receivedLastArgumentCompleted;
 
 @end
 
@@ -151,35 +153,150 @@
     
     NSString *receivedString = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     
-    NSArray *messageInArray = [self decodeStringToMessageInArrayFormat:receivedString];
+    [self decodeStringToMessageInArrayFormat:receivedString];
     
-    NSLog(@"Received message:");
-    for(NSString *line in messageInArray)
-        NSLog(@"%@", line);
-    
+    while([self hasENDInUnfinishedMessage]){
+        NSArray *messageInArray = [self processUnfinishedMessage];
         
-    if(self.receivedMessageBlock){
-        self.receivedMessageBlock(messageInArray);
-    }else{
-        NSLog(@"Received message but no block can be called!");
+        if(!messageInArray) //not a complete message
+            return;
+        
+        NSLog(@"Received message:");
+        for(NSString *line in messageInArray)
+            NSLog(@"%@", line);
+        
+            
+        if(self.receivedMessageBlock){
+            self.receivedMessageBlock(messageInArray);
+        }else{
+            NSLog(@"Received message but no block can be called!");
+        }
+        
     }
-        
+}
+
+-(BOOL)hasENDInUnfinishedMessage{
+
+    for(NSString *line in self.unfinishedMessage){
+        if([line isEqualToString:@"END"])
+            return YES;
+    }
     
+    return NO;
+}
+
+-(NSArray *)processUnfinishedMessage{
+    
+    NSMutableArray *arrayMessage = [[NSMutableArray alloc] init];
+    
+    NSInteger i = 0;
+    BOOL hasEND = NO;
+    
+    for(NSString *line in self.unfinishedMessage){
+        NSString *treatedLine;
+#warning need fix
+        //need fix
+        if([line rangeOfString:@":"].location == 0)
+            treatedLine = [line substringFromIndex:1];
+        else
+            treatedLine = line;
+        
+        if([treatedLine isEqualToString:@"END"]){
+            hasEND = YES;
+            break;
+        }else
+            [arrayMessage addObject:treatedLine];
+        
+        i++;
+    }
+    
+    if(hasEND){
+        
+        for(int j=0; j < i+1; j++)
+            [self.unfinishedMessage removeObjectAtIndex:0];
+        return [arrayMessage copy];
+    }else{
+        
+        return nil;
+    }
+
+
 }
 
 //Decode to command and arguments
--(NSArray *)decodeStringToMessageInArrayFormat:(NSString *)string{
+-(void)decodeStringToMessageInArrayFormat:(NSString *)string{
     //todo: handle multiple message case, include fragment(seperate with END\n?)
-    NSArray *originMsg = [string componentsSeparatedByString:@"\n"];
     
+    
+    NSArray *originMsg = [string componentsSeparatedByString:@"\n"];
     NSMutableArray *treatedMsg = [originMsg mutableCopy];
-    //handle : before arguments
-    for (int i=1; i < treatedMsg.count - 1; i++) { //start from second object, ignore END
-        [treatedMsg setObject:[treatedMsg[i] substringFromIndex:1] atIndexedSubscript:i];
+    
+    if(!self.receivedLastArgumentCompleted){
+        if([[treatedMsg firstObject] isEqualToString:@""]){
+            
+            [treatedMsg removeObjectAtIndex:0];
+        
+        }else{
+            treatedMsg[0] = [NSString stringWithFormat:@"%@%@",
+                             [self.unfinishedMessage lastObject],treatedMsg[0]];
+            [self.unfinishedMessage removeLastObject];
+        }
+    
     }
-    [treatedMsg removeObjectAtIndex:[treatedMsg count]-1]; //remove @""
-    [treatedMsg removeObjectAtIndex:[treatedMsg count]-1]; //remove @"END"
-    return [treatedMsg copy];
+    
+//    if([[treatedMsg firstObject] isEqualToString:@""]){
+//        
+//        if(!self.receivedLastArgumentCompleted){
+//            treatedMsg[0] = [NSString stringWithFormat:@"%@%@",
+//                             [self.unfinishedMessage lastObject],treatedMsg[0]];
+//        }
+//        
+//        [treatedMsg removeObjectAtIndex:0];
+//    }
+    
+    
+    
+    if([[string substringFromIndex:[string length]-1] isEqualToString:@"\n"]){ //complete
+    
+        [treatedMsg removeObjectAtIndex:[treatedMsg count]-1]; //remove @""
+        
+        self.receivedLastArgumentCompleted = YES;
+    
+    }else{
+    
+        NSLog(@"Imcomplete message received");
+        self.receivedLastArgumentCompleted = NO;
+    
+    }
+    
+    
+    
+//    if([[treatedMsg lastObject] isEqualToString:@""]){
+//        
+//        self.receivedLastArgumentCompleted = YES;
+//    }else{
+//        self.receivedLastArgumentCompleted = NO;
+//    }
+    
+    NSLog(@"Received raw message:");
+    for(NSString *line in originMsg)
+        NSLog(@"%@", line);
+    
+    NSLog(@"Received raw message2:");
+    for(NSString *line in treatedMsg)
+        NSLog(@"%@", line);
+    
+    //NSMutableArray *treatedMsg = [originMsg mutableCopy];
+    
+    [self.unfinishedMessage addObjectsFromArray:[treatedMsg copy]];
+    
+        //handle : before arguments
+//    for (int i=1; i < treatedMsg.count - 1; i++) { //start from second object, ignore END
+//        [treatedMsg setObject:[treatedMsg[i] substringFromIndex:1] atIndexedSubscript:i];
+//    }
+//    [treatedMsg removeObjectAtIndex:[treatedMsg count]-1]; //remove @""
+//    [treatedMsg removeObjectAtIndex:[treatedMsg count]-1]; //remove @"END"
+//    return [treatedMsg copy];
 }
 
 //if queue is not empty, try to start to send first one.
@@ -317,6 +434,8 @@
     
     if (self) {
         self.queue = [[CCMessageQueue alloc] init];
+        self.unfinishedMessage = [[NSMutableArray alloc] init];
+        self.receivedLastArgumentCompleted = YES;
     }
     
     return self;

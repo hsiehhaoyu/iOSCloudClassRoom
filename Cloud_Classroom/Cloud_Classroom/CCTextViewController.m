@@ -104,6 +104,12 @@
     self.contentTextView.editable = ((CCClassTabBarController *)(self.tabBarController)).isPresenter;
 }
 
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    
+    [textView resignFirstResponder];
+
+}
+
 - (void)viewWillAppear:(BOOL)animated{
 
     //this might change according to the change in different tab, so put here
@@ -132,6 +138,8 @@
     self.serverMC = ((CCClassTabBarController *)(self.tabBarController)).serverMC;
     
     self.s3SM = ((CCClassTabBarController *)(self.tabBarController)).s3SM;
+    
+    self.contentTextView.delegate = self;
     
     NSLog(@"text editor tab loaded");
     // Do any additional setup after loading the view.

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CCPictureViewController : UIViewController
+@interface CCPictureViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 -(void)presenterStatusUpdate;
 

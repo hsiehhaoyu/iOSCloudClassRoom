@@ -15,8 +15,12 @@
 
 //====== SERVER SETTING==========
 //(Used by whoever going to set the handler)
-#define SERVER_URL_STRING @"localhost"
+
+#define SERVER_URL_STRING @"160.39.130.98"
 #define SERVER_PORT_NUM 4119
+
+//#define SERVER_URL_STRING @"localhost"
+//#define SERVER_PORT_NUM 4119
 
 
 //====== S3 Server ==============

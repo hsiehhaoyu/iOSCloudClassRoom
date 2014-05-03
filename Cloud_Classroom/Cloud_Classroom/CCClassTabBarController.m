@@ -24,20 +24,25 @@
 
 //For the case that not user leaves class himself/herself
 -(void)classDismissed{
-    [CCMiscHelper showAlertWithTitle:@"Class dismissed"
-                          andMessage:@"Class has been dismissed by the instructor."];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [CCMiscHelper showAlertWithTitle:@"Class dismissed"
+                              andMessage:@"Class has been dismissed by the instructor."];
     
-    
-    [self backToClassList];
+        
+        [self backToClassList];
+    });
 }
 
 -(void)kickedOut{
 
-    [CCMiscHelper showAlertWithTitle:@"Not in class"
-                          andMessage:@"You're no longer in the class."];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [CCMiscHelper showAlertWithTitle:@"Not in class"
+                              andMessage:@"You're no longer in the class."];
     
     
-    [self backToClassList];
+        [self backToClassList];
+    });
 
 }
 
@@ -86,6 +91,9 @@
                      
                      [CCMiscHelper showAlertWithTitle:@"Can't push the content"
                                            andMessage:@"You are not the presenter"];
+                     self.isPresenter = NO;
+                     
+                     [self updateCurrentViewControllerPresenterStatus];
                  
                  }else{
                  
@@ -168,6 +176,7 @@
     
 }
 
+//Will also download it if new content available
 -(void)checkLatestContent{
     
     [self.serverMC
@@ -181,8 +190,20 @@
              if(sentResult == SendMessageResultSucceeded){
                  if([status isEqualToString:SUCCESS]){
                      
-                     [self receivedPushContentNotifyWithClassID:classID
-                                                   andContentID:contentID];
+//                     if(![contentID isEqualToString:self.latestImageContentID] &&
+//                        ![contentID isEqualToString:self.latestTextContentID]){
+                     
+#warning DoSomeChangeAfterImplementCache
+                     //even if the same, we still download it, so that
+                     //if user pushed a content, made some
+                     //change, and then what to discard the change use
+                     //refresh, he can't do it if we use if to
+                     //to check latest content ID. If the future if
+                     //we implement the cache mechanism, we probably
+                     //could change to fetch the image from cache.
+                     [self receivedNewContentNotifyWithClassID:classID
+                                                      andContentID:contentID];
+//                     }
                      
                  }else if([status isEqualToString:NOT_LOGIN]){
                      
@@ -212,52 +233,117 @@
              }
              
          });
-         
-    
-}];
+     
+     }];
     
 
 }
 
--(void)receivedPushContentNotifyWithClassID:(NSString *)classID
-                               andContentID:(NSString *)contentID{
+-(void)updateCurrentViewControllerPresenterStatus{
+
+    SEL presenterStatusUpdateSEL = NSSelectorFromString(@"presenterStatusUpdate");
     
-    NSString *contentType = IMAGE_TYPE;
+    UIViewController *currentVC = self.selectedViewController;
+    
+    if ([currentVC respondsToSelector:presenterStatusUpdateSEL]){
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+        
+            ((void (*)(id, SEL))[currentVC methodForSelector:presenterStatusUpdateSEL])(currentVC, presenterStatusUpdateSEL);
+        });
+    }
+
+}
+
+-(NSString *)determineFileTypeWithFileName:(NSString *)fileName{
+    
+    NSArray *supportedImageExtensions = @[@".tiff", @".tif", @".jpg", @".jpeg",
+                                          @".gif", @".png", @".bmp", @".BMPf",
+                                          @".ico", @".cur", @".xbm"];
+    
+    //check whether is image type
+    for(NSString *extension in supportedImageExtensions){
+        NSRange extensionRange = [fileName rangeOfString:extension];
+        //If the string is at the end of the filaName, it's extension
+        if(extensionRange.location + extensionRange.length == fileName.length)
+        //if(extensionRange.location != NSNotFound)
+            return IMAGE_TYPE;
+    }
+    
+    //Now we treat all other cases are text file
+    return TEXT_TYPE;
+    
+
+}
+
+//Will also be called after query latest contentID, if new content available
+-(void)receivedNewContentNotifyWithClassID:(NSString *)classID
+                              andContentID:(NSString *)contentID{
+    
     
     if(![classID isEqualToString:self.classOnGoing.classID]){
         NSLog(@"The push content is not for this class");
         return;
     }
     
-    UIViewController *currentVC = [CCMiscHelper getTopViewController];
+    NSString *contentType = [self determineFileTypeWithFileName:contentID];
+    
+    UIViewController *currentVC = self.selectedViewController;
+    
+    //NOTE: in tab bar controller, the top view controller is always
+    //tabBarController, the presentedViewController is always nil,
+    //so need to use selectedViewController to get current VC
+    /*
+    NSLog(@"selectedVC: %@", [[currentVC class] description]);
+    NSLog(@"presented VC: %@", [[self.presentedViewController class] description]);
+    NSLog(@"topVC: %@", [[[CCMiscHelper getTopViewController] class] description]);
+    */
+    
+    NSLog(@"Has new content received");
     
     if([contentType isEqualToString:IMAGE_TYPE]){
         
-        self.latestImageContentID = contentID;
+        if(![self.latestImageContentID isEqualToString:contentID]){
         
-        if([currentVC isMemberOfClass:[CCPictureViewController class]]){
+            self.latestImageContentID = contentID;
             
-            [((CCPictureViewController *)(currentVC))
-             downloadContentWithFileName:contentID];
+            if([currentVC isMemberOfClass:[CCPictureViewController class]]){
+                
+                [((CCPictureViewController *)(currentVC))
+                 downloadContentWithFileName:contentID];
+                
+            }else{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.selectedViewController = [self.viewControllers objectAtIndex:0];
+                });
+            }
             
         }
-        
-        
         
     }else if([contentType isEqualToString:TEXT_TYPE]){
         
-        self.latestTextContentID = contentID;
+        if(![self.latestTextContentID isEqualToString:contentID]){
         
-        if([currentVC isMemberOfClass:[CCTextViewController class]]){
+            self.latestTextContentID = contentID;
             
-            [((CCTextViewController *)(currentVC))
-             downloadContentWithFileName:contentID];
+            if([currentVC isMemberOfClass:[CCTextViewController class]]){
+                
+                [((CCTextViewController *)(currentVC))
+                 downloadContentWithFileName:contentID];
+                
+            }else{
             
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.selectedViewController = [self.viewControllers objectAtIndex:1];
+                });
+            }
+        
         }
         
-        
     }else{
+        
         NSLog(@"incorrect content type received.");
+        
     }
 
 }
@@ -269,6 +355,7 @@
     
     //Get the MessageCenter in AppDelegate
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
+   
     self.serverMC = appDelegate.serverMessageCenter;
     
     self.s3SM = [[CCS3ServerManager alloc] init];
@@ -280,31 +367,39 @@
     //Set what to do if receive certain indepentent message from server
     self.serverMC.receivedPushContentNotifyBlock = ^(NSString *classID,NSString *contentID){
         
-        [weakSelf receivedPushContentNotifyWithClassID:classID
+        [weakSelf receivedNewContentNotifyWithClassID:classID
                                           andContentID:contentID];
         
     };
     
     self.serverMC.receivedKickUserIndBlock = ^(NSString *status,NSString *classId,NSString *className){
-        [weakSelf kickedOut];
+        
+        if([classId isEqualToString:weakSelf.classOnGoing.classID]){
+            [weakSelf kickedOut];
+        }
     };
     
     self.serverMC.receivedRetrievePresentTokenIndBlock = ^(NSString *classID, NSString *className){
         weakSelf.isPresenter = NO;
         
-        SEL presenterStatusUpdateSEL = NSSelectorFromString(@"presenterStatusUpdate");
-        
-        if ([weakSelf.presentedViewController respondsToSelector:presenterStatusUpdateSEL]){
-            [weakSelf.presentedViewController performSelector:presenterStatusUpdateSEL];
-        }
+        [weakSelf updateCurrentViewControllerPresenterStatus];
     };
     
-    
+    //set what to do when receive push notification
+    appDelegate.receivedPushNotificationBlock = ^(NSDictionary *receivedMessage){
+        //for now we don't care the content of push notification,
+        //we check for new class content whenever receive a push notification
+        [weakSelf checkLatestContent];
+    };
+
 }
 
 -(void)dealloc{
     
     [self.serverMC setAllBlocksToNilExceptLogoutBlock];
+    
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.receivedPushNotificationBlock = nil;
     
 }
 

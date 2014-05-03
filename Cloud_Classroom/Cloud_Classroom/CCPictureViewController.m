@@ -101,14 +101,60 @@
 }
 
 -(void)presenterStatusUpdate{
+    
+    NSArray *defaultRightBarButtonItems = [CCClassHelper
+                                           getConstClassRightBarButtonItemsWithSender:self
+                                           isPresenter:((CCClassTabBarController *)(self.tabBarController)).isPresenter];
+    
+    if(((CCClassTabBarController *)(self.tabBarController)).isPresenter){
+        
+        UIBarButtonItem *pickImageBarButtonItem = [[UIBarButtonItem alloc]
+                                        initWithTitle:@"I"
+                                        style:UIBarButtonItemStyleBordered
+                                        target:self
+                                        action:@selector(pickImage)];
 
-    self.pictureNavigationItem.rightBarButtonItems = [CCClassHelper
-                                                      getConstClassRightBarButtonItemsWithSender:self
-                                                      isPresenter:((CCClassTabBarController *)(self.tabBarController)).isPresenter];
+        self.pictureNavigationItem.rightBarButtonItems = [defaultRightBarButtonItems arrayByAddingObject:pickImageBarButtonItem];
+        
+    }else{
+        
+        self.pictureNavigationItem.rightBarButtonItems = defaultRightBarButtonItems;
+        
+    }
     
     
 
 }
+
+
+//UIImagePicker related delegate functions
+//Reference: http://aws.amazon.com/articles/SDKs/iOS/3002109349624271
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    
+    UIImage *selectedImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    self.contentImageView.image = selectedImage;
+    
+    //[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)pickImage
+{
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.delegate = self;
+    
+    [self presentViewController:imagePicker animated:YES completion:nil];
+}
+
+
 
 - (void)viewWillAppear:(BOOL)animated{
     

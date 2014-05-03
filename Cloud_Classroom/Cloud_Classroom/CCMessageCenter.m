@@ -10,6 +10,7 @@
 #import "CCCommunicationHandler.h"
 #import "CCConfiguration.h"
 #import "CCClass.h"
+#import "CCAppDelegate.h"
 
 
 @interface CCMessageCenter ()
@@ -25,7 +26,7 @@
 //Used to store sent messages so that it can be retreived when receiving corresponding response
 @property (strong,atomic) NSMutableArray *sentMessages; //of CCMessages
 
-@property (strong,atomic) NSString *tokenOfAPN;
+//@property (strong,atomic) NSString *tokenOfAPN;
 
 @end
 
@@ -83,10 +84,15 @@
         return;
     }
     
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSString *tokenOfAPN;
+    
 #warning Change in the future
-    if(!self.tokenOfAPN){
-        NSLog(@"toeken Of APN is unset. Will set it to empty string now");
-        self.tokenOfAPN = @"";
+    if(!appDelegate.deviceToken){
+        NSLog(@"token Of APN is unset. Will set it to empty string now");
+        tokenOfAPN = @"";
+    }else{
+        tokenOfAPN = appDelegate.deviceToken;
     }
     
     if(self.isLoggedIn){
@@ -95,7 +101,7 @@
     
     CCMessage *message = [[CCMessage alloc]
                           initWithCommand:LOGIN_REQ
-                          andArguments:@[userID, password, deviceType, self.tokenOfAPN]
+                          andArguments:@[userID, password, deviceType, tokenOfAPN]
                           andSendCompletionBlock:^(SendMessageResult result) {
                               
                               if (result != SendMessageResultSucceeded) {
@@ -437,9 +443,9 @@
                                   
 #warning Change this when finished
                                   //DEBUG(change to following line after finish)
-                                  completion(SendMessageResultSucceeded, SUCCESS, arguments[0], arguments[1]);
+                                  //completion(SendMessageResultSucceeded, SUCCESS, arguments[0], arguments[1]);
                                    
-                                  //completion(SendMessageResultSucceeded, arguments[2], arguments[0], arguments[1]);
+                                  completion(SendMessageResultSucceeded, arguments[2], arguments[0], arguments[1]);
                               }
                               
                           }];

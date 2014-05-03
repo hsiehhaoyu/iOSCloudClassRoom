@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CCTextViewController : UIViewController
+@interface CCTextViewController : UIViewController <UITextViewDelegate>
 
 
 

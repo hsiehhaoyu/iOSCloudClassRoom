@@ -35,6 +35,8 @@
        
     }
     
+
+    
     if([CCMiscHelper isStringEmpty:fileName] ||
        [CCMiscHelper isStringEmpty:BUCKET_NAME]){
         NSLog(@"File name or bucket name is empty.");

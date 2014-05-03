@@ -15,7 +15,11 @@
     // Override point for customization after application launch.
     
     //===== for push notification =====
-     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge)];
+    
+    //clear badge number if any
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     //=================================
     return YES;
 }
@@ -52,6 +56,11 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     NSLog(@"receive deviceToken: %@", deviceToken);
+    
+    NSString *deviceTokenString = [NSString stringWithFormat:@"%@", deviceToken];
+    NSLog(@"deviceToken string: %@", deviceTokenString);
+    
+    self.deviceToken = deviceTokenString;
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -62,6 +71,12 @@
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
 	NSLog(@"Received notification: %@", userInfo);
+    if(self.receivedPushNotificationBlock){
+        self.receivedPushNotificationBlock(userInfo);
+    }
+    
+    //clear badge number
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 	
 }
 

@@ -12,6 +12,7 @@
 #import "CCConfiguration.h"
 #import "CCMiscHelper.h"
 #import "CCClassHelper.h"
+#import "CCAppDelegate.h"
 
 
 @interface CCStudentTableViewController ()

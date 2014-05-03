@@ -29,6 +29,15 @@
 
 - (IBAction)loginButtonClicked:(UIButton *)sender {
     
+    if([CCMiscHelper isStringEmpty:self.userIDTextField.text] ||
+       [CCMiscHelper isStringEmpty:self.passwordTextField.text]){
+    
+        [CCMiscHelper showAlertWithTitle:@"Empty text field"
+                              andMessage:@"Please input both User Name and Password."];
+        return;
+    
+    }
+    
     [self.serverMC loginWithUserID:self.userIDTextField.text
                        andPassword:self.passwordTextField.text
                      andDeviceType:IOS
@@ -95,12 +104,14 @@
     return NO;
 }
 
--(BOOL)textFieldShouldReturn:(UITextField *)textField{
-    
+
+//Let keyboard disappear when user click enter
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
     [textField resignFirstResponder];
-    
     return YES;
 }
+
 
 //handle received messages that is NOT a response for a request we sent
 -(void)handleReceivedRequestWithCommand:(NSString *)command andArguments:(NSArray *)arguments{
@@ -150,6 +161,9 @@
 -(void)viewDidLoad{
     
     [super viewDidLoad];
+    
+    self.userIDTextField.delegate = self;
+    self.passwordTextField.delegate = self;
     
     //init the CCMessageCenter in AppDelegate(not connect now)
     self.serverMC = [[CCMessageCenter alloc] init];

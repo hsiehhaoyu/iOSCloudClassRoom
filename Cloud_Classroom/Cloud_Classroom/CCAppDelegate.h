@@ -15,4 +15,8 @@
 
 @property (strong, atomic) CCMessageCenter *serverMessageCenter;
 
+@property (strong, nonatomic) void (^receivedPushNotificationBlock)(NSDictionary *receivedMessage);
+
+@property (strong, nonatomic) NSString *deviceToken;
+
 @end
