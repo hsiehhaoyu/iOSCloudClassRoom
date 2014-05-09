@@ -10,4 +10,6 @@
 
 @interface CCLoginViewController : UIViewController
 
+-(void)setupServerMC;
+
 @end

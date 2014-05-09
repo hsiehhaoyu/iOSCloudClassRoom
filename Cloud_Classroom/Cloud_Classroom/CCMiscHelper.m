@@ -16,7 +16,7 @@
     NSLog(@"Conneciotn failed, send result code: %ld", sentResult);
     
     [CCMiscHelper showAlertWithTitle:@"Connection failed"
-                          andMessage:@"Couldn't connect to server, please check your network availability."];
+                          andMessage:@"Couldn't connect to server. Please check your network availability."];
     
 }
 

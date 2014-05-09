@@ -42,4 +42,6 @@
 
 -(void)makeAllMessagesInQueueCompletedWithResult:(SendMessageResult)result;
 
+-(void)closeServerConnection;
+
 @end

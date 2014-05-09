@@ -185,6 +185,9 @@
     return NO;
 }
 
+
+//this function along with receivedData and decodeStringTo...
+//may be optimized for efficiency in the future. (but now works well)
 -(NSArray *)processUnfinishedMessage{
     
     NSMutableArray *arrayMessage = [[NSMutableArray alloc] init];
@@ -194,8 +197,7 @@
     
     for(NSString *line in self.unfinishedMessage){
         NSString *treatedLine;
-#warning need fix
-        //need fix
+        
         if([line rangeOfString:@":"].location == 0)
             treatedLine = [line substringFromIndex:1];
         else
@@ -225,8 +227,6 @@
 
 //Decode to command and arguments
 -(void)decodeStringToMessageInArrayFormat:(NSString *)string{
-    //todo: handle multiple message case, include fragment(seperate with END\n?)
-    
     
     NSArray *originMsg = [string componentsSeparatedByString:@"\n"];
     NSMutableArray *treatedMsg = [originMsg mutableCopy];
@@ -395,14 +395,23 @@
 }
 
 
+-(void)closeServerConnection{
+    
+    [self.queue removeAllMessages];
+    [self.unfinishedMessage removeAllObjects];
+    self.receivedLastArgumentCompleted = YES;
+
+    if(self.serverConnection)
+        [self.serverConnection endConnection];
+
+}
+
+
 //return YES if init (not connect) the serverConnection successfully
 //will set to logout state, close existing connection, and init a new TCPConnection
 -(BOOL)setServerURL:(NSURL *)url andPort:(NSInteger)port{
     
-    [self.queue removeAllMessages];
-    
-    if(self.serverConnection)
-        [self.serverConnection endConnection];
+    [self closeServerConnection];
     
     self.serverConnection = [[CCTCPConnection alloc] initWithURL:url andPort:port];
     

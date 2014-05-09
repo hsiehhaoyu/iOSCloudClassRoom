@@ -16,12 +16,14 @@
 //====== SERVER SETTING==========
 //(Used by whoever going to set the handler)
 
-#define SERVER_URL_STRING @"160.39.130.98"
-#define SERVER_PORT_NUM 4119
+#define DEFAULT_SERVER_URL @"54.187.167.5"
+#define DEFAULT_SERVER_PORT 4119
 
 //#define SERVER_URL_STRING @"localhost"
 //#define SERVER_PORT_NUM 4119
 
+#define ALLOWED_MIN_PORT_NUM 0
+#define ALLOWED_MAX_PORT_NUM 65535
 
 //====== S3 Server ==============
 #define S3_ACCESS_KEY @"AKIAJQAGTZZGZ6WIE3AQ"
@@ -111,5 +113,9 @@
 //content type (for our srever, not s3)
 #define IMAGE_TYPE @"image"
 #define TEXT_TYPE @"text"
+
+//================ NSUserDefault =================
+#define SERVER_URL @"SERVER_URL"
+#define SERVER_PORT @"SERVER_PORT"
 
 #endif

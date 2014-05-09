@@ -153,6 +153,16 @@
     return [self.studentNames count];
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    
+    if (section == 0){
+        return @"Student list";
+    }else{
+        return @"";
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     

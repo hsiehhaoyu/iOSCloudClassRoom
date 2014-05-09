@@ -75,7 +75,10 @@
                                   }
                               }else{
                                   
-                                  [CCMiscHelper showConnectionFailedAlertWithSendResult:sentResult];
+                                  NSLog(@"Conneciotn failed, send result code: %d", sentResult);
+                                  
+                                  [CCMiscHelper showAlertWithTitle:@"Connection failed"
+                                                        andMessage:@"Couldn't connect to server. Please check your network availability and server setting."];
                                   
                               }
                               
@@ -100,6 +103,8 @@
         if (sender == self) {
             return YES;
         }
+    }else if([identifier isEqualToString:@"Setting"]){
+        return YES;
     }
     return NO;
 }
@@ -112,6 +117,12 @@
     return YES;
 }
 
+//Used to resign keyboard when touch out side of textFields
+//Reference: http://stackoverflow.com/questions/5306240/iphone-dismiss-keyboard-when-touching-outside-of-textfield
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesBegan:touches withEvent:event];
+    [self.view endEditing:YES];
+}
 
 //handle received messages that is NOT a response for a request we sent
 -(void)handleReceivedRequestWithCommand:(NSString *)command andArguments:(NSArray *)arguments{
@@ -151,20 +162,8 @@
     });
 }
 
+-(void)setupServerMC{
 
--(void)viewDidAppear:(BOOL)animated{
-    
-    [self.serverMC logoutAndTriggerLogoutBlock:NO onCompletion:nil];
-}
-
-
--(void)viewDidLoad{
-    
-    [super viewDidLoad];
-    
-    self.userIDTextField.delegate = self;
-    self.passwordTextField.delegate = self;
-    
     //init the CCMessageCenter in AppDelegate(not connect now)
     self.serverMC = [[CCMessageCenter alloc] init];
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -179,7 +178,36 @@
     self.serverMC.logoutBlock = ^(){
         [weakSelf handleLogoutForControllers];
     };
- 
+
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //for any reason that back to login page, try to logout first
+    //so that can be recovered from error states if any
+    [self.serverMC logoutAndTriggerLogoutBlock:NO onCompletion:nil];
+    
+    //not sure whether the inputStream/outputStream will be
+    //automactically removed from runloop after no reference
+    //count or not, so we still do this manually first
+    [self.serverMC closeServerConnection];
+    
+    //we do this every time login view show up
+    //so that the system can recover from unexpected
+    //error states (if any)
+    [self setupServerMC];
+}
+
+
+-(void)viewDidLoad{
+    
+    [super viewDidLoad];
+    
+    self.userIDTextField.delegate = self;
+    self.passwordTextField.delegate = self;
+    
+    
+    
 }
 
 

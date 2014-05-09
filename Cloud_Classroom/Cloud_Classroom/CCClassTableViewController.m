@@ -308,8 +308,15 @@
     return [self.classes count];
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
 
-
+    if (section == 0){
+        return @"Class name and instructor";
+    }else{
+        return @"";
+    }
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {

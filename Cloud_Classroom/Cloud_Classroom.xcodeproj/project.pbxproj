@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5C2B938B1902B37700B85DD1 /* CCClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C2B938A1902B37700B85DD1 /* CCClass.m */; };
+		5C4D1EB219194C7F0063FA52 /* CCSettingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4D1EB119194C7F0063FA52 /* CCSettingTableViewController.m */; };
 		5C8FBC341910B0B0004200DE /* CCPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8FBC331910B0B0004200DE /* CCPictureViewController.m */; };
 		5C8FBC371910B0C6004200DE /* CCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8FBC361910B0C6004200DE /* CCTextViewController.m */; };
 		5C8FBC3A1910B6F0004200DE /* CCClassHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8FBC391910B6F0004200DE /* CCClassHelper.m */; };
@@ -64,6 +65,8 @@
 /* Begin PBXFileReference section */
 		5C2B93891902B37700B85DD1 /* CCClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCClass.h; sourceTree = "<group>"; };
 		5C2B938A1902B37700B85DD1 /* CCClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCClass.m; sourceTree = "<group>"; };
+		5C4D1EB019194C7F0063FA52 /* CCSettingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSettingTableViewController.h; sourceTree = "<group>"; };
+		5C4D1EB119194C7F0063FA52 /* CCSettingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCSettingTableViewController.m; sourceTree = "<group>"; };
 		5C8FBC321910B0B0004200DE /* CCPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCPictureViewController.h; sourceTree = "<group>"; };
 		5C8FBC331910B0B0004200DE /* CCPictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCPictureViewController.m; sourceTree = "<group>"; };
 		5C8FBC351910B0C6004200DE /* CCTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTextViewController.h; sourceTree = "<group>"; };
@@ -241,7 +244,7 @@
 				5CB294E618F6383800A2AB45 /* CCConfiguration.h */,
 				5CD631CC18F4DF9200FF29F0 /* Main.storyboard */,
 				5CA4952E190328470007FD28 /* Unit */,
-				5CD631F418F4E08600FF29F0 /* Tools */,
+				5CD631F418F4E08600FF29F0 /* Models */,
 				5CD631EF18F4DFAE00FF29F0 /* Controllers */,
 				5CD631D218F4DF9200FF29F0 /* Images.xcassets */,
 				5C8FBCD41912BBE5004200DE /* Images */,
@@ -284,6 +287,8 @@
 		5CD631EF18F4DFAE00FF29F0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				5C4D1EB019194C7F0063FA52 /* CCSettingTableViewController.h */,
+				5C4D1EB119194C7F0063FA52 /* CCSettingTableViewController.m */,
 				5C8FBC321910B0B0004200DE /* CCPictureViewController.h */,
 				5C8FBC331910B0B0004200DE /* CCPictureViewController.m */,
 				5C8FBC351910B0C6004200DE /* CCTextViewController.h */,
@@ -300,7 +305,7 @@
 			name = Controllers;
 			sourceTree = "<group>";
 		};
-		5CD631F418F4E08600FF29F0 /* Tools */ = {
+		5CD631F418F4E08600FF29F0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				5C8FBCCD191149C4004200DE /* CCS3ServerManager.h */,
@@ -316,7 +321,7 @@
 				5CD631F118F4E07700FF29F0 /* CCTCPConnection.h */,
 				5CD631F218F4E07700FF29F0 /* CCTCPConnection.m */,
 			);
-			name = Tools;
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -368,7 +373,7 @@
 				ORGANIZATIONNAME = "Hao-Yu Hsieh";
 				TargetAttributes = {
 					5CD631B618F4DF9100FF29F0 = {
-						DevelopmentTeam = D5G7A73C8V;
+						DevelopmentTeam = 2M8CW9842Q;
 					};
 					5CD631D718F4DF9200FF29F0 = {
 						TestTargetID = 5CD631B618F4DF9100FF29F0;
@@ -425,6 +430,7 @@
 				5CB294E218F61F2700A2AB45 /* CCLoginViewController.m in Sources */,
 				5CE7B5931909358C0055E381 /* CCMiscHelper.m in Sources */,
 				5CA36E701900BC370069A1BA /* CCMessage.m in Sources */,
+				5C4D1EB219194C7F0063FA52 /* CCSettingTableViewController.m in Sources */,
 				5CA98F1A190908D400776C32 /* CCClassTableViewController.m in Sources */,
 				5CE7B59919095AE00055E381 /* CCStudentTableViewController.m in Sources */,
 				5C8FBC3A1910B6F0004200DE /* CCClassHelper.m in Sources */,
@@ -572,7 +578,7 @@
 				GCC_PREFIX_HEADER = "Cloud_Classroom/Cloud_Classroom-Prefix.pch";
 				INFOPLIST_FILE = "Cloud_Classroom/Cloud_Classroom-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9D7C8EEF-2F12-4420-8135-FAC293EC02C1";
+				PROVISIONING_PROFILE = "A0600BFD-B6A8-4E6E-997C-3FE1A2E4879F";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -592,7 +598,7 @@
 				GCC_PREFIX_HEADER = "Cloud_Classroom/Cloud_Classroom-Prefix.pch";
 				INFOPLIST_FILE = "Cloud_Classroom/Cloud_Classroom-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9D7C8EEF-2F12-4420-8135-FAC293EC02C1";
+				PROVISIONING_PROFILE = "A0600BFD-B6A8-4E6E-997C-3FE1A2E4879F";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

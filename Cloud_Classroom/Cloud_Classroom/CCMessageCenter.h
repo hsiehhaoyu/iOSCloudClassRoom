@@ -111,6 +111,7 @@
 
 //======= Others ==========
 -(void)setAllBlocksToNilExceptLogoutBlock;
+-(void)closeServerConnection;
 
 
 @end

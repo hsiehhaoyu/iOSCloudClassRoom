@@ -968,6 +968,21 @@
 
 }
 
+#warning Think about whether need to do more things
+-(void)clearSentMessages{
+    
+    [self.sentMessages removeAllObjects];
+    
+}
+
+//Note that this doesn't mean to logout, so will keep cookieID
+#warning Think about whether need to do more things
+-(void)closeServerConnection{
+
+    [self clearSentMessages];
+    [self.serverCH closeServerConnection];
+
+}
 
 //use cookieID to verify, which will be nil if not logged in
 -(BOOL)isLoggedIn{
@@ -1047,9 +1062,24 @@
     if (self) {
         self.cookieID = nil;
         self.sentMessages = [[NSMutableArray alloc] init];
+        
+        //load server setting
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        NSString *serverURL = [userDefaults objectForKey:SERVER_URL];
+        NSInteger serverPort = [userDefaults integerForKey:SERVER_PORT];
+        
+        if(!serverURL){ //cannot find the field
+            serverURL = DEFAULT_SERVER_URL;
+            serverPort = DEFAULT_SERVER_PORT;
+            NSLog(@"App first time loaded. Generate server info in standardUserDefaults.");
+            [userDefaults setObject:serverURL forKey:SERVER_URL];
+            [userDefaults setInteger:serverPort forKey:SERVER_PORT];
+            [userDefaults synchronize];
+        }
+
         self.serverCH = [[CCCommunicationHandler alloc]
-                         initWithServerURL:[NSURL URLWithString:SERVER_URL_STRING]
-                         andPort:SERVER_PORT_NUM];
+                         initWithServerURL:[NSURL URLWithString:serverURL]
+                         andPort:serverPort];
         
         __weak CCMessageCenter *weakSelf = self;
         self.serverCH.receivedMessageBlock = ^(NSArray *receivedMessage){

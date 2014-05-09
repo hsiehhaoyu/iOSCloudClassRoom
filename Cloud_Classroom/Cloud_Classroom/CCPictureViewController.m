@@ -117,7 +117,7 @@
         self.pictureNavigationItem.rightBarButtonItems = [defaultRightBarButtonItems arrayByAddingObject:pickImageBarButtonItem];
         
     }else{
-        
+    
         self.pictureNavigationItem.rightBarButtonItems = defaultRightBarButtonItems;
         
     }
