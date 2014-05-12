@@ -110,6 +110,13 @@
 
 }
 
+//Used to resign keyboard when touch out side of textFields
+//Reference: http://stackoverflow.com/questions/5306240/iphone-dismiss-keyboard-when-touching-outside-of-textfield
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesBegan:touches withEvent:event];
+    [self.view endEditing:YES];
+}
+
 - (void)viewWillAppear:(BOOL)animated{
 
     //this might change according to the change in different tab, so put here

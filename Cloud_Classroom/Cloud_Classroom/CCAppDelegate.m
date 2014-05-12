@@ -55,12 +55,18 @@
 #pragma below_is_for_push_notification
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    NSLog(@"receive deviceToken: %@", deviceToken);
     
     NSString *deviceTokenString = [NSString stringWithFormat:@"%@", deviceToken];
-    NSLog(@"deviceToken string: %@", deviceTokenString);
+    NSLog(@"Raw device token string: %@", deviceTokenString);
     
-    self.deviceToken = deviceTokenString;
+
+    deviceTokenString = [deviceTokenString substringFromIndex:1];
+    deviceTokenString = [deviceTokenString substringToIndex:deviceTokenString.length-1];
+    
+    self.deviceToken = [deviceTokenString stringByReplacingOccurrencesOfString:@" "
+                                                                    withString:@""];
+    
+    NSLog(@"Processed device token: %@", self.deviceToken);
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error

@@ -19,11 +19,16 @@
 #define DEFAULT_SERVER_URL @"54.187.167.5"
 #define DEFAULT_SERVER_PORT 4119
 
-//#define SERVER_URL_STRING @"localhost"
-//#define SERVER_PORT_NUM 4119
-
 #define ALLOWED_MIN_PORT_NUM 0
 #define ALLOWED_MAX_PORT_NUM 65535
+
+//if open this, tcp connection will auto disconnect after a certain time
+#define USE_PUSH_NOTIFICATION
+//if need to relogin before sending a message after disconnected
+//#define USE_PUSH_NOTIFICATION_RELOGIN
+
+//whether use alert to block user operation
+//#define USE_ALERT_BLOCKING
 
 //====== S3 Server ==============
 #define S3_ACCESS_KEY @"AKIAJQAGTZZGZ6WIE3AQ"
@@ -113,6 +118,10 @@
 //content type (for our srever, not s3)
 #define IMAGE_TYPE @"image"
 #define TEXT_TYPE @"text"
+
+//in seconds
+#define DEFAULT_SENT_MESSAGES_TIMEOUT 7 //for MessageCenter
+#define DEFAULT_MESSAGE_QUEUE_TIMEOUT 3 //for CommunicationHandler
 
 //================ NSUserDefault =================
 #define SERVER_URL @"SERVER_URL"

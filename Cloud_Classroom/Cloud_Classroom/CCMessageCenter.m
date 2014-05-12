@@ -28,6 +28,17 @@
 
 //@property (strong,atomic) NSString *tokenOfAPN;
 
+#ifdef USE_ALERT_BLOCKING
+//Used to block user interface if need to wait for response
+@property (strong,atomic) UIAlertView *blockingAlert;
+@property (strong,atomic) CCMessage *blockingMessage;
+#endif
+
+#ifdef USE_PUSH_NOTIFICATION_RELOGIN
+@property (strong,nonatomic) NSString *userID;
+@property (strong,nonatomic) NSString *password;
+#endif
+
 @end
 
 @implementation CCMessageCenter
@@ -39,9 +50,79 @@
         return;
     }
     
+#ifdef USE_PUSH_NOTIFICATION_RELOGIN
+    if(!self.serverCH.isConnectedToServer){
+        if(![message.command isEqualToString:LOGIN_REQ] &&
+           ![message.command isEqualToString:LOGOUT_REQ]){
+            
+            [self loginWithUserID:self.userID
+                      andPassword:self.password
+                    andDeviceType:IOS
+                     onCompletion:^(SendMessageResult sentResult,
+                                    NSString *status) {
+                         
+                    
+                         //dispatch_async(dispatch_get_main_queue(), ^{
+                             
+                             
+                             if(sentResult == SendMessageResultSucceeded){
+                                 if([status isEqualToString:LOGGED_IN]){
+                                     
+                                     NSLog(@"Logged in before sending message");
+                                     
+                                 }else{
+                                     
+                                     //NSLog(@"Login faild while trying to . status: %@", status);
+                                     
+                                     NSString *failedReason;
+                                     
+                                     if([status isEqualToString:DUPLICATE]){
+                                         
+                                         failedReason = @"You have another login session on another device. Please logout it first.";
+                                         
+                                     }else if([status isEqualToString:LOGIN_FAIL] || [status isEqualToString:INVALID_USER]){
+                                         
+                                         failedReason = @"Incorrect user name or password.";
+                                         
+                                     }else{
+                                         
+                                         failedReason = @"Unknown reason";
+                                     }
+                                     
+                                     NSLog(@"Login Failed before sending message, reason: %@", failedReason);
+                                     
+                                 }
+                             }else{
+                                 
+                                 NSLog(@"Conneciotn failed before login for sending message, send result code: %d", (int)sentResult);
+                                 
+                             }
+                             
+                             
+                        // });
+                         
+                     }];
+        
+        }
+    }
+#endif
+    
     //save it if there should be a response come from server
-    if(hasResponse)
+    if(hasResponse){
         [self.sentMessages addObject:message];
+        [self removeMessage:message fromSentMessagesAfter:DEFAULT_SENT_MESSAGES_TIMEOUT];
+#ifdef USE_ALERT_BLOCKING
+        self.blockingAlert= [[UIAlertView alloc]
+                             initWithTitle:nil
+                             message:@"Waiting for response ..."
+                             delegate:self
+                             cancelButtonTitle:@"Cancel"
+                             otherButtonTitles: nil];
+        self.blockingAlert.tag = 1;
+        [self.blockingAlert show];
+        self.blockingMessage = message;
+#endif
+    }
     
     //Note: No need and cannot put into dispatch_async here.
     //I have handle sending and receiving in different thread
@@ -61,6 +142,74 @@
     //https://developer.apple.com/library/ios/documentation/cocoa/reference/NSStreamDelegate_Protocol/Reference/Reference.html
     [self.serverCH sendToServerWithMessage:message];
     
+}
+
+#ifdef USE_ALERT_BLOCKING
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView.tag == 1){ //user clicked cancel for a request waiting for response
+        if(buttonIndex == 0){
+            NSLog(@"User cancelled the request");
+            [self removeMessageFromSentMessages:self.blockingMessage];
+            self.blockingAlert = nil;
+            self.blockingMessage = nil;
+
+    #ifdef USE_PUSH_NOTIFICATION
+            if(self.sentMessages.count == 0 && self.serverCH.isQueueEmpty)
+                [self closeServerConnection];
+    #endif
+        }
+    }
+}
+#endif
+
+//remove message after certain time
+//Reference: http://stackoverflow.com/questions/4139219/how-do-you-trigger-a-block-after-a-delay-like-performselectorwithobjectafter
+-(void)removeMessage:(CCMessage *)message fromSentMessagesAfter:(NSInteger)delaySeconds{
+    
+    __weak CCMessageCenter *weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delaySeconds * NSEC_PER_SEC),dispatch_get_main_queue(), ^{
+        if(weakSelf){
+            if([weakSelf isMessageInSentMessages:message]){
+                [weakSelf removeMessageFromSentMessages:message];
+                
+#ifdef USE_ALERT_BLOCKING
+                if([weakSelf.blockingMessage isEqual:message]){
+                    [weakSelf dismissBlockingAlert];
+                }
+#endif
+                
+                if(message.sendCompletionBlock)
+                    message.sendCompletionBlock(SendMessageResultTimeOut);
+                
+                //may or may not in its queue
+                if(weakSelf.serverCH)
+                    [weakSelf.serverCH removeMessageFromQueue:message];
+                
+                NSLog(@"Message timeout, removed from sentMessages. Command: %@", message.command);
+                
+#ifdef USE_PUSH_NOTIFICATION
+                if(weakSelf.sentMessages.count == 0 && weakSelf.serverCH.isQueueEmpty)
+                    [weakSelf closeServerConnection];
+#endif
+            }
+        }
+    });
+}
+
+-(void)removeMessageFromSentMessages:(CCMessage *)message{
+    [self.sentMessages removeObject:message];
+}
+
+-(BOOL)isMessageInSentMessages:(CCMessage *)message{
+    for(CCMessage *msg in self.sentMessages){
+    
+        if([msg isEqual:message])
+            return YES;
+    
+    }
+    
+    return NO;
 }
 
 /*
@@ -87,7 +236,6 @@
     CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
     NSString *tokenOfAPN;
     
-#warning Change in the future
     if(!appDelegate.deviceToken){
         NSLog(@"token Of APN is unset. Will set it to empty string now");
         tokenOfAPN = @"";
@@ -106,7 +254,7 @@
                               
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send login message failed, code: %ld", result);
+                                  NSLog(@"try to send login message failed, code: %d", (int)result);
                                   completion(result, nil);
                                   
                               }
@@ -125,6 +273,10 @@
                                       
                                       self.cookieID = arguments[1];
                                       
+#ifdef USE_PUSH_NOTIFICATION_RELOGIN
+                                      self.userID = userID;
+                                      self.password = password;
+#endif
                                   }else{
                                       self.cookieID = nil; //May not necessary, but in case
                                   }
@@ -163,7 +315,7 @@
                               andSendCompletionBlock:^(SendMessageResult result) {
                                   if (result != SendMessageResultSucceeded) {
                                       
-                                      NSLog(@"try to send logout message failed, code: %ld", result);
+                                      NSLog(@"try to send logout message failed, code: %d", (int)result);
                                       if(completion)
                                           completion(result, nil);
                                       
@@ -230,7 +382,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send create class message failed, code: %ld", result);
+                                  NSLog(@"try to send create class message failed, code: %d", (int)result);
                                   completion(result, nil, nil);
                                   
                               }
@@ -309,7 +461,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send list class message failed, code: %ld", result);
+                                  NSLog(@"try to send list class message failed, code: %d", (int)result);
                                   completion(result, nil, 0, nil);
                                   
                               }
@@ -379,7 +531,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send delete class message failed, code: %ld", result);
+                                  NSLog(@"try to send delete class message failed, code: %d", (int)result);
                                   completion(result, nil);
                                   
                               }
@@ -424,7 +576,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send join class message failed, code: %ld", result);
+                                  NSLog(@"try to send join class message failed, code: %d", (int)result);
                                   completion(result, nil, nil, nil);
                                   
                               }
@@ -441,10 +593,6 @@
                                         classID, arguments[0]);
                               }else{
                                   
-#warning Change this when finished
-                                  //DEBUG(change to following line after finish)
-                                  //completion(SendMessageResultSucceeded, SUCCESS, arguments[0], arguments[1]);
-                                   
                                   completion(SendMessageResultSucceeded, arguments[2], arguments[0], arguments[1]);
                               }
                               
@@ -477,7 +625,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send query class info message failed, code: %ld", result);
+                                  NSLog(@"try to send query class info message failed, code: %d", (int)result);
                                   completion(result, nil, nil, 0, nil);
                                   
                               }
@@ -539,7 +687,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send quit class message failed, code: %ld", result);
+                                  NSLog(@"try to send quit class message failed, code: %d", (int)result);
                                   completion(result, nil);
                                   
                               }
@@ -586,7 +734,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send kick student message failed, code: %ld", result);
+                                  NSLog(@"try to send kick student message failed, code: %d", (int)result);
                                   completion(result, nil);
                                   
                               }
@@ -634,7 +782,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send create class message failed, code: %ld", result);
+                                  NSLog(@"try to send create class message failed, code: %d", (int)result);
                                   completion(result, nil);
                                   
                               }
@@ -681,7 +829,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send getPresentToken message failed, code: %ld", result);
+                                  NSLog(@"try to send getPresentToken message failed, code: %d", (int)result);
                                   completion(result, nil, nil, nil);
                                   
                               }
@@ -730,7 +878,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send retrievePresentToken message failed, code: %ld", result);
+                                  NSLog(@"try to send retrievePresentToken message failed, code: %d", (int)result);
                                   completion(result, nil);
                                   
                               }
@@ -778,7 +926,7 @@
                           andSendCompletionBlock:^(SendMessageResult result) {
                               if (result != SendMessageResultSucceeded) {
                                   
-                                  NSLog(@"try to send create class message failed, code: %ld", result);
+                                  NSLog(@"try to send create class message failed, code: %d", (int)result);
                                   completion(result, nil, nil, nil);
                                   
                               }
@@ -871,17 +1019,27 @@
             NSLog(@"Cannot find corresponding request for the response, discard it. Command: %@", command);
             return;
         }
-    
+#ifdef USE_ALERT_BLOCKING
+        if([requestMessage isEqual:self.blockingMessage])
+            [self dismissBlockingAlert];
+#endif
         if(requestMessage.receiveResponseBlock) //shouldn't be nil, but in case
             requestMessage.receiveResponseBlock(command, arguments);
     }
 
     //if has STATUS and is NOT_LOGIN, execute logout action
     if(commandInfo[2] != [NSNull null]){
-        if([[arguments objectAtIndex:[(NSNumber *)commandInfo[2] integerValue]] isEqualToString:NOT_LOGIN])
+        if([[arguments objectAtIndex:[(NSNumber *)commandInfo[2] integerValue]] isEqualToString:NOT_LOGIN]){
             [self logoutAndTriggerLogoutBlock:YES onCompletion:nil];
+            //no need [self closeServerConnection]; since whenever going to login page will reset Message Center
+            //Also, closeServerConnetion will call back block, so shouldn't when going to logout
+        }
     }
 
+#ifdef USE_PUSH_NOTIFICATION
+    if(self.sentMessages.count == 0 && self.serverCH.isQueueEmpty)
+        [self closeServerConnection];
+#endif
 
 }
 
@@ -898,9 +1056,18 @@
     
     for(CCMessage *message in self.sentMessages){
     
-        if([[CCMessageCenter getInfoOfCommand:command][0] isEqualToString:message.command]){
-            requestMessage = message;
-            break;
+        NSArray *commandInfo = [CCMessageCenter getInfoOfCommand:command];
+        if([commandInfo[0] isEqualToString:message.command]){
+            if(commandInfo[3] == [NSNull null]){
+                requestMessage = message;
+                break;
+            }else{ // has classID in both response and request
+                if([[arguments objectAtIndex:[(NSNumber *)commandInfo[3] integerValue]]
+                   isEqualToString:[message.arguments objectAtIndex:[(NSNumber *)commandInfo[4] integerValue]]]){
+                    requestMessage = message;
+                    break;
+                }
+            }
         }
     }
     
@@ -968,20 +1135,51 @@
 
 }
 
-#warning Think about whether need to do more things
--(void)clearSentMessages{
+#ifdef USE_ALERT_BLOCKING
+-(void)dismissBlockingAlert{
     
+    if(self.blockingAlert){
+        //dispatch_async(dispatch_get_main_queue(), ^{
+            [self.blockingAlert dismissWithClickedButtonIndex:-1 animated:YES];
+            self.blockingAlert = nil;
+            self.blockingMessage = nil;
+        //});
+    }
+    
+}
+#endif
+
+-(void)clearSentMessagesWithResult:(SendMessageResult)result{
+    
+    for(CCMessage *message in self.sentMessages){
+#ifdef USE_ALERT_BLOCKING
+        if([message isEqual:self.blockingMessage])
+            [self dismissBlockingAlert];
+#endif
+        if(message.sendCompletionBlock)
+            message.sendCompletionBlock(result);
+        //remove message from its queue so that won't call completion block twice if the msg is there
+        [self.serverCH removeMessageFromQueue:message];
+        
+        
+    }
+    
+    //can not use removeObject:message, since it will generate exception
+    //that "NSMutableArray was mutated while being enumerated."
     [self.sentMessages removeAllObjects];
     
 }
 
 //Note that this doesn't mean to logout, so will keep cookieID
-#warning Think about whether need to do more things
 -(void)closeServerConnection{
 
-    [self clearSentMessages];
+    [self clearSentMessagesWithResult:SendMessageResultConnectionClosed];
     [self.serverCH closeServerConnection];
 
+}
+
+-(BOOL)isSentMessagesEmpty{
+    return (self.sentMessages.count == 0);
 }
 
 //use cookieID to verify, which will be nil if not logged in
@@ -1023,30 +1221,41 @@
          * from 0) of STATUS arg of the
          * command if any, or [NSNull null] otherwise. (For example, 
          * CREATE_CLASS_RES (STATUS, CLASS_ID) will be 0)
+         
+         * The fourth argument indicate the position of 'classID' 
+         * in a response if any. Will be [NSNull null] otherwise
+         
+         * The fifth is the same as fourth, but in request
          */
         commandInfoDictionary = @{
                         
-                 LOGIN_RES  : @[LOGIN_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:0]],
-                 LOGOUT_RES : @[LOGOUT_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 CREATE_CLASS_RES : @[CREATE_CLASS_REQ, [NSNumber numberWithInteger:2], [NSNumber numberWithInteger:0]],
-                 LIST_CLASS_RES : @[LIST_CLASS_REQ, nothing, [NSNumber numberWithInteger:0]],
-                 DEL_CLASS_RES : @[DEL_CLASS_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 JOIN_CLASS_RES : @[JOIN_CLASS_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:2]],
-                 QUERY_CLASS_INFO_RES : @[QUERY_CLASS_INFO_REQ, nothing, [NSNumber numberWithInteger:0]],
-                 QUIT_CLASS_RES : @[QUIT_CLASS_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 KICK_USER_RES : @[KICK_USER_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 KICK_USER_IND : @[nothing, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:0]],
-                 PUSH_CONTENT_RES : @[PUSH_CONTENT_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 PUSH_CONTENT_NOTIFY : @[nothing, [NSNumber numberWithInteger:2], nothing],
-                 PUSH_CONTENT_GET_RES : @[PUSH_CONTENT_GET_REQ, [NSNumber numberWithInteger:5], [NSNumber numberWithInteger:0]],
-                 COND_PUSH_CONTENT_RES : @[COND_PUSH_CONTENT_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 COND_PUSH_CONTENT_GET_NOTIFY : @[nothing, [NSNumber numberWithInteger:2], nothing],
-                 CHANGE_PRESENT_TOKEN_REQ : @[nothing, [NSNumber numberWithInteger:2], nothing],
-                 GET_PRESENT_TOKEN_RES : @[GET_PRESENT_TOKEN_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:2]],
-                 CHANGE_PRESENT_TOKEN_IND : @[nothing, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 RETRIEVE_PRESENT_TOKEN_IND : @[nothing, [NSNumber numberWithInteger:2], nothing],
-                 RETRIEVE_PRESENT_TOKEN_RES : @[RETRIEVE_PRESENT_TOKEN_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0]],
-                 QUERY_LATEST_CONTENT_RES : @[QUERY_LATEST_CONTENT_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:0]]
+                 LOGIN_RES  : @[LOGIN_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:0], nothing, nothing],
+                 LOGOUT_RES : @[LOGOUT_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0], nothing, nothing],
+                 CREATE_CLASS_RES : @[CREATE_CLASS_REQ, [NSNumber numberWithInteger:2], [NSNumber numberWithInteger:0],
+                                      nothing, nothing],
+                 LIST_CLASS_RES : @[LIST_CLASS_REQ, nothing, [NSNumber numberWithInteger:0], nothing, nothing],
+                 DEL_CLASS_RES : @[DEL_CLASS_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0], nothing, nothing],
+                 JOIN_CLASS_RES : @[JOIN_CLASS_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:2],
+                                    [NSNumber numberWithInteger:0], [NSNumber numberWithInteger:1]],
+                 QUERY_CLASS_INFO_RES : @[QUERY_CLASS_INFO_REQ, nothing, [NSNumber numberWithInteger:0], nothing, nothing],
+                 QUIT_CLASS_RES : @[QUIT_CLASS_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0], nothing, nothing],
+                 KICK_USER_RES : @[KICK_USER_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0], nothing, nothing],
+                 KICK_USER_IND : @[nothing, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:0], nothing, nothing],
+                 PUSH_CONTENT_RES : @[PUSH_CONTENT_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0], nothing, nothing],
+                 PUSH_CONTENT_NOTIFY : @[nothing, [NSNumber numberWithInteger:2], nothing, nothing, nothing],
+                 PUSH_CONTENT_GET_RES : @[PUSH_CONTENT_GET_REQ, [NSNumber numberWithInteger:5], [NSNumber numberWithInteger:0], nothing, nothing],
+                 COND_PUSH_CONTENT_RES : @[COND_PUSH_CONTENT_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0],
+                                           nothing, nothing],
+                 COND_PUSH_CONTENT_GET_NOTIFY : @[nothing, [NSNumber numberWithInteger:2], nothing, nothing, nothing],
+                 CHANGE_PRESENT_TOKEN_REQ : @[nothing, [NSNumber numberWithInteger:2], nothing, nothing, nothing],
+                 GET_PRESENT_TOKEN_RES : @[GET_PRESENT_TOKEN_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:2],
+                                           [NSNumber numberWithInteger:0], [NSNumber numberWithInteger:1]],
+                 CHANGE_PRESENT_TOKEN_IND : @[nothing, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0], nothing, nothing],
+                 RETRIEVE_PRESENT_TOKEN_IND : @[nothing, [NSNumber numberWithInteger:2], nothing, nothing, nothing],
+                 RETRIEVE_PRESENT_TOKEN_RES : @[RETRIEVE_PRESENT_TOKEN_REQ, [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:0],
+                                                nothing, nothing],
+                 QUERY_LATEST_CONTENT_RES : @[QUERY_LATEST_CONTENT_REQ, [NSNumber numberWithInteger:3], [NSNumber numberWithInteger:0],
+                                              [NSNumber numberWithInteger:1], [NSNumber numberWithInteger:1]]
                  
                  };
     });
@@ -1081,9 +1290,12 @@
                          initWithServerURL:[NSURL URLWithString:serverURL]
                          andPort:serverPort];
         
+        self.serverCH.serverMC = self;
+        
         __weak CCMessageCenter *weakSelf = self;
         self.serverCH.receivedMessageBlock = ^(NSArray *receivedMessage){
-            [weakSelf processReceivedMessage:receivedMessage];
+            if(weakSelf)
+                [weakSelf processReceivedMessage:receivedMessage];
         };
     }
     

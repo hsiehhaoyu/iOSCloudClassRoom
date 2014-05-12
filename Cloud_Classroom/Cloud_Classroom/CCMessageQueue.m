@@ -46,6 +46,20 @@
     [self.queue removeAllObjects];
 }
 
+-(void)removeMessage:(CCMessage *)message{
+    [self.queue removeObject:message];
+}
+
+-(BOOL)isMessageInQueue:(CCMessage *)message{
+
+    for(CCMessage *msg in self.queue){
+        if([msg isEqual:message]){
+            return YES;
+        }
+    }
+    return NO;
+}
+
 -(BOOL)isEmpty{
 
     return (self.queue.count == 0);

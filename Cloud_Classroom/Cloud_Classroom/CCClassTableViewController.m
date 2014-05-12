@@ -13,6 +13,7 @@
 #import "CCClass.h"
 #import "CCMiscHelper.h"
 #import "CCClassTabBarController.h"
+#import "UIBarButtonItem+Image.h"
 
 @interface CCClassTableViewController ()
 
@@ -33,7 +34,7 @@
 
 @implementation CCClassTableViewController
 
-- (IBAction)refreshClassTable {
+- (void)refreshClassTable {
 
     //[self.refreshControl beginRefreshing];
     
@@ -47,8 +48,8 @@
             if(sentResult == SendMessageResultSucceeded){
                 if([status isEqualToString:SUCCESS]){
                     
-                    NSLog(@"Fetch class list succeeded. # of class: %ld, classes count: %lu",
-                          numOfClasses, (unsigned long)[classes count]);
+                    NSLog(@"Fetch class list succeeded. # of class: %d, classes count: %d",
+                            (int)numOfClasses, (int)[classes count]);
                     
                     self.classes = classes;
                     [self.tableView reloadData];
@@ -157,7 +158,7 @@
 
 }
 
-- (IBAction)logoutButtonClicked:(UIBarButtonItem *)sender {
+- (void)logoutButtonClicked{
     [self.serverMC logoutAndTriggerLogoutBlock:YES onCompletion:nil];
 }
 
@@ -166,16 +167,31 @@
 -(void)askForJoinClass:(CCClass *)class{
 
     //use different thread so it won't block the return value of shouldPerformSegue
-    dispatch_queue_t queryClassInfo = dispatch_queue_create("queryClassInfo", NULL);
-    dispatch_async(queryClassInfo, ^{
+    //dispatch_queue_t queryClassInfo = dispatch_queue_create("queryClassInfo", NULL);
+    //dispatch_async(queryClassInfo, ^{
         
         [self.serverMC
          joinClassWithClassID:class.classID
          onCompletion:^(SendMessageResult sentResult, NSString *status,
                         NSString *classID, NSString *className) {
              
+        
+             
+             
+             if(![[CCMiscHelper getTopViewController] isEqual:self]){
+                 //already not in this page, so no need to run the following
+                 return;
+             }
+             
              dispatch_async(dispatch_get_main_queue(), ^{
                  if(sentResult == SendMessageResultSucceeded){
+                     
+                     if(![classID isEqualToString:class.classID]){
+                         NSLog(@"The join class response is not for this class");
+                         return;
+                     }
+                     
+                     
                      if([status isEqualToString:SUCCESS] || [status isEqualToString:ALREADY_IN_CLASS]){
                          
                          self.classToGo = class;
@@ -204,7 +220,13 @@
                      
                  }else{
                      
-                     [CCMiscHelper showConnectionFailedAlertWithSendResult:sentResult];
+                     if(sentResult == SendMessageResultTimeOut){
+                         NSLog(@"Request timeout");
+                         
+                         [CCMiscHelper showAlertWithTitle:@"Timeout"
+                                               andMessage:@"Didn't get response from the instructor."];
+                     }else
+                         [CCMiscHelper showConnectionFailedAlertWithSendResult:sentResult];
                      
                  }
                  
@@ -212,7 +234,7 @@
              
         }];
         
-    });
+    //});
 }
 
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
@@ -266,15 +288,25 @@
     //Since we need more than one right button, so do it programatically
     //refresh button (although you can use pull down refresh)
     UIBarButtonItem *refreshBarButton = [[UIBarButtonItem alloc]
-                                         initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
+                                         initWithImageOnly:[UIImage imageNamed:@"refresh24"]
                                          target:self
                                          action:@selector(refreshClassTable)];
-    UIBarButtonItem *addClassBarButton = [[UIBarButtonItem alloc]
-                                         initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                         target:self
-                                         action:@selector(createClassButtonClicked)];
+//    UIBarButtonItem *addClassBarButton = [[UIBarButtonItem alloc]
+//                                         initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+//                                         target:self
+//                                         action:@selector(createClassButtonClicked)];
+//    
+//    self.classTableNavigationItem.rightBarButtonItems = @[addClassBarButton, refreshBarButton];
     
-    self.classTableNavigationItem.rightBarButtonItems = @[addClassBarButton, refreshBarButton];
+    //Currently our iOS don't support instructor mode, so no need addClass fuction now
+    self.classTableNavigationItem.rightBarButtonItems = @[refreshBarButton];
+    
+    UIBarButtonItem *logoutBarButton = [[UIBarButtonItem alloc]
+                                         initWithImageOnly:[UIImage imageNamed:@"logout24"]
+                                         target:self
+                                         action:@selector(logoutButtonClicked)];
+    
+    self.classTableNavigationItem.leftBarButtonItems = @[logoutBarButton];
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;

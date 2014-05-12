@@ -112,6 +112,6 @@
 //======= Others ==========
 -(void)setAllBlocksToNilExceptLogoutBlock;
 -(void)closeServerConnection;
-
-
+-(void)removeMessageFromSentMessages:(CCMessage *)message;
+-(BOOL)isSentMessagesEmpty;
 @end

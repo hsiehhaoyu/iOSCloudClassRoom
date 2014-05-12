@@ -13,7 +13,7 @@
 #import "CCMiscHelper.h"
 #import "CCClassHelper.h"
 #import "CCAppDelegate.h"
-
+#import "UIBarButtonItem+Image.h"
 
 @interface CCStudentTableViewController ()
 
@@ -37,7 +37,7 @@
 
 @implementation CCStudentTableViewController
 
-- (IBAction)refreshStudentTable {
+- (void)refreshStudentTable {
     
     //[self.refreshControl beginRefreshing];
     self.labelStudentNumber.text = @"Loading...";
@@ -53,8 +53,8 @@
              if(sentResult == SendMessageResultSucceeded){
                  if([status isEqualToString:SUCCESS]){
                      
-                     NSLog(@"fetch class list succeeded. # of class: %ld, classes count: %lu",
-                           numOfStudents, (unsigned long)[studentNames count]);
+                     NSLog(@"fetch class list succeeded. # of class: %d, classes count: %d",
+                           (int)numOfStudents,(int)[studentNames count]);
                      
                      self.studentNames = studentNames;
                      self.labelStudentNumber.text = [NSString stringWithFormat:@"%lu",(unsigned long)[studentNames count]];
@@ -98,7 +98,7 @@
 -(void)viewDidAppear:(BOOL)animated{
     
     [self refreshStudentTable];
-    
+        
 }
 
 - (void)viewDidLoad
@@ -111,11 +111,14 @@
     self.tableView.dataSource = self;
     
     
+     
+
+    
     //Add buttons programatically
-    UIBarButtonItem *refreshBarButton = [[UIBarButtonItem alloc]
-                                         initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
-                                         target:self
-                                         action:@selector(refreshStudentTable)];
+     UIBarButtonItem *refreshBarButton = [[UIBarButtonItem alloc]
+                                          initWithImageOnly:[UIImage imageNamed:@"refresh24"]
+                                          target:self
+                                          action:@selector(refreshStudentTable)];
         
     self.studentTableNavigationItem.rightBarButtonItems = @[refreshBarButton];
     self.studentTableNavigationItem.leftBarButtonItems = [CCClassHelper getConstClassLeftBarButtonItemsWithSender:self];

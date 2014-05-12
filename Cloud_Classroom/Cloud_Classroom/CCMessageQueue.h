@@ -19,4 +19,8 @@
 
 -(void)removeAllMessages;
 
+-(void)removeMessage:(CCMessage *)message;
+
+-(BOOL)isMessageInQueue:(CCMessage *)message;
+
 @end

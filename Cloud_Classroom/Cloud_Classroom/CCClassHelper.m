@@ -8,6 +8,7 @@
 
 #import "CCClassHelper.h"
 #import "CCClassTabBarController.h"
+#import "UIBarButtonItem+Image.h"
 
 @implementation CCClassHelper
 
@@ -23,19 +24,17 @@
         [sender respondsToSelector:getLatestContentSEL]){
         
         UIBarButtonItem *getPresentTokenBarButton = [[UIBarButtonItem alloc]
-                                                     initWithTitle:@"P"
-                                                     style:UIBarButtonItemStyleBordered
+                                                     initWithImageOnly:[UIImage imageNamed:@"present24"]
                                                      target:sender
                                                      action:getPresentTokenSEL];
         
         UIBarButtonItem *pushContentBarButton = [[UIBarButtonItem alloc]
-                                                 initWithTitle:@"S"
-                                                 style:UIBarButtonItemStyleBordered
+                                                 initWithImageOnly:[UIImage imageNamed:@"upload24"]
                                                  target:sender
                                                  action:pushContentSEL];
         
         UIBarButtonItem *getLatestContentBarButton = [[UIBarButtonItem alloc]
-                                                      initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
+                                                      initWithImageOnly:[UIImage imageNamed:@"refresh24"]
                                                       target:sender
                                                       action:getLatestContentSEL];
         
@@ -53,25 +52,28 @@
 //Get const left bar button items: Logout, Back to class list, and Quit class
 +(NSArray *)getConstClassLeftBarButtonItemsWithSender:(UIViewController *)sender{
     
-    UIBarButtonItem *logoutBarButton = [[UIBarButtonItem alloc]
-                                        initWithTitle:@"L"
-                                        style:UIBarButtonItemStyleBordered
-                                        target:(CCClassTabBarController *)(sender.tabBarController)
-                                        action:@selector(logout)];
+//    UIBarButtonItem *logoutBarButton = [[UIBarButtonItem alloc]
+//                                        initWithImageOnly:[UIImage imageNamed:@"logout24"]
+//                                        target:(CCClassTabBarController *)(sender.tabBarController)
+//                                        action:@selector(logout)];
+//    
+    
+    
     
     UIBarButtonItem *backToClassListBarButton = [[UIBarButtonItem alloc]
-                                                 initWithTitle:@"B"
-                                                 style:UIBarButtonItemStyleBordered
+                                                 initWithImageOnly:[UIImage imageNamed:@"classlist24"]
                                                  target:(CCClassTabBarController *)(sender.tabBarController)
                                                  action:@selector(backToClassList)];
     
     UIBarButtonItem *quitClassBarButton = [[UIBarButtonItem alloc]
-                                           initWithTitle:@"Q"
-                                           style:UIBarButtonItemStyleBordered
+                                           initWithImageOnly:[UIImage imageNamed:@"quit24"]
                                            target:(CCClassTabBarController *)(sender.tabBarController)
                                            action:@selector(quitClass)];
     
-    return @[logoutBarButton, backToClassListBarButton, quitClassBarButton];
+    //return @[logoutBarButton, quitClassBarButton, backToClassListBarButton];
+    
+    //for now don't put logout icon in in-class views
+    return @[quitClassBarButton, backToClassListBarButton];
     
 }
 

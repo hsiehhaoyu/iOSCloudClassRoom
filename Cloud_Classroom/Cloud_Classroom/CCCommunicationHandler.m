@@ -11,6 +11,9 @@
 
 #import "CCCommunicationHandler.h"
 #import "CCMessageQueue.h"
+#import "CCConfiguration.h"
+#import "CCAppDelegate.h"
+#import "CCMiscHelper.h"
 
 @interface CCCommunicationHandler ()
 
@@ -76,6 +79,7 @@
             }else if(result == TryToConnectResultAlreadyTrying){
                 
                 [self.queue pushMessage:message];
+                [self removeMessage:message fromQueueAfter:DEFAULT_MESSAGE_QUEUE_TIMEOUT];
                 
                 NSLog(@"Is already trying to connect when sending message, put it into queue");
 //                if(completion)
@@ -131,6 +135,7 @@
                         completion(SendMessageResultSucceeded);
                 }else if(result == SendDataResultHasNoSpaceToSend){
                     [self.queue pushMessage:message];
+                    [self removeMessage:message fromQueueAfter:DEFAULT_MESSAGE_QUEUE_TIMEOUT];
                     
                     NSLog(@"Has no space to send when sending message, put it into queue");
                     
@@ -143,6 +148,33 @@
             }];
         
     }
+}
+
+//remove message after certain time
+//Reference: http://stackoverflow.com/questions/4139219/how-do-you-trigger-a-block-after-a-delay-like-performselectorwithobjectafter
+-(void)removeMessage:(CCMessage *)message fromQueueAfter:(NSInteger)delaySeconds{
+    
+    __weak CCCommunicationHandler *weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delaySeconds * NSEC_PER_SEC),dispatch_get_main_queue(), ^{
+        if(weakSelf){
+            if([weakSelf.queue isMessageInQueue:message]){
+                [weakSelf removeMessageFromQueue:message];
+                if(message.sendCompletionBlock)
+                    message.sendCompletionBlock(SendMessageResultTimeOut);
+                
+                //may or may not in its queue
+                if(weakSelf.serverMC)
+                    [weakSelf.serverMC removeMessageFromSentMessages:message];
+                
+                NSLog(@"Message timeout, removed from Queue. Command: %@", message.command);
+                
+#ifdef USE_PUSH_NOTIFICATION
+                if(weakSelf.queue.isEmpty && weakSelf.serverMC.isSentMessagesEmpty)
+                    [weakSelf.serverMC closeServerConnection];
+#endif
+            }
+        }
+    });
 }
 
 //What to do when received data
@@ -336,14 +368,32 @@
         if(message){
             if(message.sendCompletionBlock)
                 message.sendCompletionBlock(result);
+            
+            if(self.serverMC)
+                [self.serverMC removeMessageFromSentMessages:message];
         }
     }
 }
 
--(void)removeAllMessagesInQueue{
+-(void)makeMessage:(CCMessage *)message completedWithResult:(SendMessageResult)result{
+    if(message){
+        if([self.queue isMessageInQueue:message]){
+            [self.queue removeMessage:message];
+            if(message.sendCompletionBlock)
+                message.sendCompletionBlock(result);
+            
+            if(self.serverMC)
+               [self.serverMC removeMessageFromSentMessages:message];
+        }
+    }
+}
 
-    [self.queue removeAllMessages];
+-(void)removeMessageFromQueue:(CCMessage *)message{
+    [self.queue removeMessage:message];
+}
 
+-(BOOL)isQueueEmpty{
+    return self.queue.isEmpty;
 }
 
 -(void)tryToConnectServerAndOnCompletion:(void (^)(TryToConnectResult))completion{
@@ -397,7 +447,7 @@
 
 -(void)closeServerConnection{
     
-    [self.queue removeAllMessages];
+    [self makeAllMessagesInQueueCompletedWithResult:SendMessageResultConnectionClosed];
     [self.unfinishedMessage removeAllObjects];
     self.receivedLastArgumentCompleted = YES;
 
@@ -405,6 +455,7 @@
         [self.serverConnection endConnection];
 
 }
+
 
 
 //return YES if init (not connect) the serverConnection successfully
@@ -445,9 +496,54 @@
         self.queue = [[CCMessageQueue alloc] init];
         self.unfinishedMessage = [[NSMutableArray alloc] init];
         self.receivedLastArgumentCompleted = YES;
+        
+        //set what to do when receive push notification
+        CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
+        __weak CCCommunicationHandler *weakSelf = self;
+        appDelegate.receivedPushNotificationBlock = ^(NSDictionary *receivedMessage){
+            
+            if(weakSelf){
+                if(receivedMessage){
+                    receivedMessage = [receivedMessage objectForKey:@"aps"];
+                    if(receivedMessage){
+                        NSString *messageString = [receivedMessage objectForKey:@"alert"];
+                        if(messageString){
+                            if(![CCMiscHelper isStringEmpty:messageString]){
+                                NSMutableArray *messageInArray = [[messageString componentsSeparatedByString:@"\n"] mutableCopy];
+                                //remove "END"
+                                [messageInArray removeLastObject];
+                                //remove ":"
+                                for(int i=1; i<messageInArray.count; i++){
+                                    messageInArray[i] = [(NSString *)messageInArray[i] substringFromIndex:1];
+                                }
+                                
+                                NSLog(@"Received message from APN:");
+                                for(NSString *line in messageInArray)
+                                    NSLog(@"%@", line);
+                                
+                                
+                                if(weakSelf.receivedMessageBlock){
+                                    weakSelf.receivedMessageBlock([messageInArray copy]);
+                                }else{
+                                    NSLog(@"Received message from APN but no block can be called!");
+                                }
+                            
+                            }
+                        }
+                    }
+                }
+                
+                //NSLog(@"Receieved Notification from APN but it's in wrong format");
+            }
+        };
     }
     
     return self;
+}
+
+-(void)dealloc{
+    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.receivedPushNotificationBlock = nil;
 }
 
 @end

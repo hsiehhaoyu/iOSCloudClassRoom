@@ -47,7 +47,7 @@
     self.serverURLTextField.delegate = self;
     self.serverPortTextField.delegate = self;
     self.serverURLTextField.text = serverURL;
-    self.serverPortTextField.text = [NSString stringWithFormat:@"%d",serverPort];
+    self.serverPortTextField.text = [NSString stringWithFormat:@"%d",(int)serverPort];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;

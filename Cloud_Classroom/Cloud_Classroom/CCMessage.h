@@ -17,7 +17,9 @@ typedef NS_ENUM(NSInteger, SendMessageResult) {
     SendMessageResultInvalidArguments,
     //SendMessageResultHasNoSpaceToSend,
     SendMessageResultFailed,
-    SendMessageResultTimeOut
+    SendMessageResultTimeOut,
+    SendMessageResultUserCancelled,
+    SendMessageResultConnectionClosed //is going to close connection so complete with this result
 };
 
 @interface CCMessage : NSObject

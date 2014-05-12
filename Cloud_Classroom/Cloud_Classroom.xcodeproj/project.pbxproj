@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C13423A1920179B0015C674 /* no_content_available.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C1342391920179B0015C674 /* no_content_available.png */; };
+		5C13423E19209DF30015C674 /* cloud_classroom.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C13423D19209DF30015C674 /* cloud_classroom.png */; };
+		5C13424019209F890015C674 /* legend.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C13423F19209F890015C674 /* legend.png */; };
 		5C2B938B1902B37700B85DD1 /* CCClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C2B938A1902B37700B85DD1 /* CCClass.m */; };
 		5C4D1EB219194C7F0063FA52 /* CCSettingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C4D1EB119194C7F0063FA52 /* CCSettingTableViewController.m */; };
 		5C8FBC341910B0B0004200DE /* CCPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8FBC331910B0B0004200DE /* CCPictureViewController.m */; };
@@ -26,7 +29,6 @@
 		5C8FBC531910FF76004200DE /* AWSSNS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC471910FF75004200DE /* AWSSNS.framework */; };
 		5C8FBC551910FF9E004200DE /* AWSSQS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8FBC541910FF9E004200DE /* AWSSQS.framework */; };
 		5C8FBCCF191149C4004200DE /* CCS3ServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C8FBCCE191149C4004200DE /* CCS3ServerManager.m */; };
-		5C8FBCD31912BBDE004200DE /* NoSlideAvailable.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5C8FBCD21912BBDE004200DE /* NoSlideAvailable.jpg */; };
 		5CA36E701900BC370069A1BA /* CCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA36E6F1900BC370069A1BA /* CCMessage.m */; };
 		5CA36E731900BCF00069A1BA /* CCMessageQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA36E721900BCF00069A1BA /* CCMessageQueue.m */; };
 		5CA98F1A190908D400776C32 /* CCClassTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA98F19190908D400776C32 /* CCClassTableViewController.m */; };
@@ -50,6 +52,7 @@
 		5CE7B5931909358C0055E381 /* CCMiscHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE7B5921909358C0055E381 /* CCMiscHelper.m */; };
 		5CE7B596190942B00055E381 /* CCClassTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE7B595190942B00055E381 /* CCClassTabBarController.m */; };
 		5CE7B59919095AE00055E381 /* CCStudentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE7B59819095AE00055E381 /* CCStudentTableViewController.m */; };
+		5CE973EA191D6D420096086F /* UIBarButtonItem+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE973E9191D6D420096086F /* UIBarButtonItem+Image.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +66,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5C1342391920179B0015C674 /* no_content_available.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no_content_available.png; sourceTree = "<group>"; };
+		5C13423D19209DF30015C674 /* cloud_classroom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud_classroom.png; sourceTree = "<group>"; };
+		5C13423F19209F890015C674 /* legend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = legend.png; sourceTree = "<group>"; };
 		5C2B93891902B37700B85DD1 /* CCClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCClass.h; sourceTree = "<group>"; };
 		5C2B938A1902B37700B85DD1 /* CCClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCClass.m; sourceTree = "<group>"; };
 		5C4D1EB019194C7F0063FA52 /* CCSettingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSettingTableViewController.h; sourceTree = "<group>"; };
@@ -88,7 +94,6 @@
 		5C8FBC541910FF9E004200DE /* AWSSQS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSSQS.framework; sourceTree = "<group>"; };
 		5C8FBCCD191149C4004200DE /* CCS3ServerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCS3ServerManager.h; sourceTree = "<group>"; };
 		5C8FBCCE191149C4004200DE /* CCS3ServerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCS3ServerManager.m; sourceTree = "<group>"; };
-		5C8FBCD21912BBDE004200DE /* NoSlideAvailable.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = NoSlideAvailable.jpg; sourceTree = "<group>"; };
 		5CA36E6E1900BC370069A1BA /* CCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMessage.h; sourceTree = "<group>"; };
 		5CA36E6F1900BC370069A1BA /* CCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMessage.m; sourceTree = "<group>"; };
 		5CA36E711900BCF00069A1BA /* CCMessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMessageQueue.h; sourceTree = "<group>"; };
@@ -127,6 +132,8 @@
 		5CE7B595190942B00055E381 /* CCClassTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCClassTabBarController.m; sourceTree = "<group>"; };
 		5CE7B59719095AE00055E381 /* CCStudentTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCStudentTableViewController.h; sourceTree = "<group>"; };
 		5CE7B59819095AE00055E381 /* CCStudentTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCStudentTableViewController.m; sourceTree = "<group>"; };
+		5CE973E8191D6D420096086F /* UIBarButtonItem+Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+Image.h"; sourceTree = "<group>"; };
+		5CE973E9191D6D420096086F /* UIBarButtonItem+Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+Image.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,7 +196,9 @@
 		5C8FBCD41912BBE5004200DE /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				5C8FBCD21912BBDE004200DE /* NoSlideAvailable.jpg */,
+				5C13423F19209F890015C674 /* legend.png */,
+				5C13423D19209DF30015C674 /* cloud_classroom.png */,
+				5C1342391920179B0015C674 /* no_content_available.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -197,6 +206,8 @@
 		5CA4952E190328470007FD28 /* Unit */ = {
 			isa = PBXGroup;
 			children = (
+				5CE973E8191D6D420096086F /* UIBarButtonItem+Image.h */,
+				5CE973E9191D6D420096086F /* UIBarButtonItem+Image.m */,
 				5C2B93891902B37700B85DD1 /* CCClass.h */,
 				5C2B938A1902B37700B85DD1 /* CCClass.m */,
 				5CA36E711900BCF00069A1BA /* CCMessageQueue.h */,
@@ -405,8 +416,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				5CD631D318F4DF9200FF29F0 /* Images.xcassets in Resources */,
+				5C13423E19209DF30015C674 /* cloud_classroom.png in Resources */,
+				5C13423A1920179B0015C674 /* no_content_available.png in Resources */,
 				5CD631C518F4DF9200FF29F0 /* InfoPlist.strings in Resources */,
-				5C8FBCD31912BBDE004200DE /* NoSlideAvailable.jpg in Resources */,
+				5C13424019209F890015C674 /* legend.png in Resources */,
 				5CD631CE18F4DF9200FF29F0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -426,6 +439,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CE973EA191D6D420096086F /* UIBarButtonItem+Image.m in Sources */,
 				5CC8221F1901FA3B00E3507E /* CCMessageCenter.m in Sources */,
 				5CB294E218F61F2700A2AB45 /* CCLoginViewController.m in Sources */,
 				5CE7B5931909358C0055E381 /* CCMiscHelper.m in Sources */,

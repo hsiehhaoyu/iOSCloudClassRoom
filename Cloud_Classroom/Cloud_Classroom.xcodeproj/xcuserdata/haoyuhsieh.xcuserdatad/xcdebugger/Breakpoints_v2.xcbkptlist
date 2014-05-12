@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCClassTableViewController.m"
-            timestampString = "420477727.245982"
+            timestampString = "421501097.95208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
+            startingLineNumber = "256"
+            endingLineNumber = "256"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCClassTableViewController.m"
-            timestampString = "420477727.245982"
+            timestampString = "421501097.95208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "232"
-            endingLineNumber = "232"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
             landmarkName = "-shouldPerformSegueWithIdentifier:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCMessageCenter.m"
-            timestampString = "420730393.889752"
+            timestampString = "421561850.998602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "154"
-            endingLineNumber = "154"
+            startingLineNumber = "306"
+            endingLineNumber = "306"
             landmarkName = "-logoutAndTriggerLogoutBlock:onCompletion:"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCMessageCenter.m"
-            timestampString = "420730393.889752"
+            timestampString = "421561850.998602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
             landmarkName = "-loginWithUserID:andPassword:andDeviceType:onCompletion:"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCClassTableViewController.m"
-            timestampString = "420477727.245982"
+            timestampString = "421501097.95208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,7 +90,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCTextViewController.m"
-            timestampString = "420755092.664631"
+            timestampString = "421534022.815019"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cloud_Classroom/CCTextViewController.m"
+            timestampString = "421534022.815019"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "140"
@@ -105,28 +121,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Cloud_Classroom/CCTextViewController.m"
-            timestampString = "420755092.664631"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
-            landmarkName = "-viewDidLoad"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCPictureViewController.m"
-            timestampString = "420730625.124213"
+            timestampString = "421497078.978504"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "-downloadContentWithFileName:"
             landmarkType = "5">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCPictureViewController.m"
-            timestampString = "420730914.7013"
+            timestampString = "421497078.978504"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "-getLatestContent"
             landmarkType = "5">
          </BreakpointContent>
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCPictureViewController.m"
-            timestampString = "420792685.783481"
+            timestampString = "421499052.909602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "160"
-            endingLineNumber = "160"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
             landmarkName = "-viewWillAppear:"
             landmarkType = "5">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCClassTabBarController.m"
-            timestampString = "420788970.974416"
+            timestampString = "421495561.894351"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "282"
-            endingLineNumber = "282"
+            startingLineNumber = "310"
+            endingLineNumber = "310"
             landmarkName = "-receivedNewContentNotifyWithClassID:andContentID:"
             landmarkType = "5">
          </BreakpointContent>
@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCCommunicationHandler.m"
-            timestampString = "420778101.810031"
+            timestampString = "421557644.752447"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "291"
-            endingLineNumber = "291"
+            startingLineNumber = "323"
+            endingLineNumber = "323"
             landmarkName = "-decodeStringToMessageInArrayFormat:"
             landmarkType = "5">
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCCommunicationHandler.m"
-            timestampString = "420776816.333708"
+            timestampString = "421557644.752447"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
             landmarkName = "-receivedData:"
             landmarkType = "5">
          </BreakpointContent>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCClassTabBarController.m"
-            timestampString = "420788970.974416"
+            timestampString = "421495561.894351"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "303"
-            endingLineNumber = "303"
+            startingLineNumber = "331"
+            endingLineNumber = "331"
             landmarkName = "-receivedNewContentNotifyWithClassID:andContentID:"
             landmarkType = "5">
          </BreakpointContent>
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCClassTabBarController.m"
-            timestampString = "420788970.974416"
+            timestampString = "421495561.894351"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
+            startingLineNumber = "287"
+            endingLineNumber = "287"
             landmarkName = "-determineFileTypeWithFileName:"
             landmarkType = "5">
          </BreakpointContent>
@@ -266,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCPictureViewController.m"
-            timestampString = "420780264.916373"
+            timestampString = "421497078.978504"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
             landmarkName = "-downloadContentWithFileName:"
             landmarkType = "5">
          </BreakpointContent>
@@ -282,11 +282,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCPictureViewController.m"
-            timestampString = "420780268.71813"
+            timestampString = "421497078.978504"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
             landmarkName = "-downloadContentWithFileName:"
             landmarkType = "5">
          </BreakpointContent>
@@ -314,11 +314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCTextViewController.m"
-            timestampString = "420783477.385509"
+            timestampString = "421534022.815019"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
+            startingLineNumber = "121"
+            endingLineNumber = "121"
             landmarkName = "-viewWillAppear:"
             landmarkType = "5">
          </BreakpointContent>
@@ -330,11 +330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCClassTabBarController.m"
-            timestampString = "420788160.23872"
+            timestampString = "421493008.168868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
             landmarkName = "-getPresentTokenAndOnCompletion:"
             landmarkType = "5">
          </BreakpointContent>
@@ -346,11 +346,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCClassTabBarController.m"
-            timestampString = "420788160.23872"
+            timestampString = "421493008.168868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "-getPresentTokenAndOnCompletion:"
             landmarkType = "5">
          </BreakpointContent>
@@ -408,11 +408,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cloud_Classroom/CCLoginViewController.m"
-            timestampString = "421133518.341225"
+            timestampString = "421503772.252906"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
             landmarkName = "-setupServerMC"
             landmarkType = "5">
          </BreakpointContent>
@@ -430,6 +430,116 @@
             startingLineNumber = "79"
             endingLineNumber = "79"
             landmarkName = "-viewWillDisappear:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cloud_Classroom/CCTCPConnection.m"
+            timestampString = "421459456.823608"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
+            landmarkName = "-tryToEstablishConnectionAndOnCompletion:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[CCTCPConnection tryToEstablishConnectionAndOnCompletion:]"
+                  moduleName = "Cloud_Classroom"
+                  urlString = "file:///Users/haoyuhsieh/Dropbox/Columbia%20Courses%20Spring%202014/Cellular%20Net%20and%20Mobi%20Comp/Final%20Project/Cloud_Classroom/CloudClassRoom/Cloud_Classroom/Cloud_Classroom/CCTCPConnection.m"
+                  timestampString = "421461157.817693"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124"
+                  offsetFromSymbolStart = "1486">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[CCTCPConnection tryToEstablishConnectionAndOnCompletion:]"
+                  moduleName = "Cloud_Classroom"
+                  urlString = "file:///Users/haoyuhsieh/Dropbox/Columbia%20Courses%20Spring%202014/Cellular%20Net%20and%20Mobi%20Comp/Final%20Project/Cloud_Classroom/CloudClassRoom/Cloud_Classroom/Cloud_Classroom/CCTCPConnection.m"
+                  timestampString = "421461157.817898"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124"
+                  offsetFromSymbolStart = "1500">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cloud_Classroom/CCMessageCenter.m"
+            timestampString = "421561850.998602"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1040"
+            endingLineNumber = "1040"
+            landmarkName = "-processReceivedMessage:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cloud_Classroom/CCMessageCenter.m"
+            timestampString = "421561850.998602"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1152"
+            endingLineNumber = "1152"
+            landmarkName = "-clearSentMessagesWithResult:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cloud_Classroom/CCMessageCenter.m"
+            timestampString = "421561850.998602"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1025"
+            endingLineNumber = "1025"
+            landmarkName = "-processReceivedMessage:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cloud_Classroom/CCMessageCenter.m"
+            timestampString = "421561850.998602"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1018"
+            endingLineNumber = "1018"
+            landmarkName = "-processReceivedMessage:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

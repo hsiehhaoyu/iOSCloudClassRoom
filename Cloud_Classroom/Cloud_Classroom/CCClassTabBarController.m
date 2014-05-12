@@ -125,10 +125,19 @@
      onCompletion:^(SendMessageResult sentResult, NSString *status,
                     NSString *classID, NSString *className) {
      
+         
+         
+         
          dispatch_async(dispatch_get_main_queue(), ^{
              if(sentResult == SendMessageResultSucceeded){
+                 
+                 if(![classID isEqualToString:self.classOnGoing.classID]){
+                     NSLog(@"The get presentation token response is not for this class");
+                     return;
+                 }
+                 
                  if([status isEqualToString:SUCCESS]){
-                    
+                     
                      self.isPresenter = YES;
                      completion(YES);
                      
@@ -142,6 +151,8 @@
                  
                  }else if([status isEqualToString:NO_PERMISSION] || [status isEqualToString:ALREADY_PRESENTER]){
                  
+                     
+                     
                      [CCMiscHelper showAlertWithTitle:@"Is presenter"
                                            andMessage:@"You are already the presenter"];
                      
@@ -167,7 +178,15 @@
                  }
                  
              }else{
-                 [CCMiscHelper showConnectionFailedAlertWithSendResult:sentResult];
+                 if(sentResult == SendMessageResultTimeOut){
+                     
+                     NSLog(@"Request timeout");
+                 
+                     [CCMiscHelper showAlertWithTitle:@"Timeout"
+                                           andMessage:@"Didn't get response from the instructor."];
+                
+                 }else
+                     [CCMiscHelper showConnectionFailedAlertWithSendResult:sentResult];
              }
              
          });
@@ -186,14 +205,23 @@
                     NSString *classID,
                     NSString *contentID) {
          
+         
+         
+         
          dispatch_async(dispatch_get_main_queue(), ^{
              if(sentResult == SendMessageResultSucceeded){
+                 
+                 if(![classID isEqualToString:self.classOnGoing.classID]){
+                     NSLog(@"The query latest content response is not for this class");
+                     return;
+                 }
+                 
                  if([status isEqualToString:SUCCESS]){
                      
 //                     if(![contentID isEqualToString:self.latestImageContentID] &&
 //                        ![contentID isEqualToString:self.latestTextContentID]){
                      
-#warning DoSomeChangeAfterImplementCache
+#pragma  DoSomeChangeAfterImplementCache
                      //even if the same, we still download it, so that
                      //if user pushed a content, made some
                      //change, and then what to discard the change use
@@ -367,39 +395,41 @@
     //Set what to do if receive certain indepentent message from server
     self.serverMC.receivedPushContentNotifyBlock = ^(NSString *classID,NSString *contentID){
         
-        [weakSelf receivedNewContentNotifyWithClassID:classID
-                                          andContentID:contentID];
-        
+        if(weakSelf){
+            [weakSelf receivedNewContentNotifyWithClassID:classID
+                                              andContentID:contentID];
+        }
     };
     
     self.serverMC.receivedKickUserIndBlock = ^(NSString *status,NSString *classId,NSString *className){
-        
-        if([classId isEqualToString:weakSelf.classOnGoing.classID]){
-            [weakSelf kickedOut];
+        if(weakSelf){
+            if([classId isEqualToString:weakSelf.classOnGoing.classID]){
+                [weakSelf kickedOut];
+            }
         }
     };
     
     self.serverMC.receivedRetrievePresentTokenIndBlock = ^(NSString *classID, NSString *className){
-        weakSelf.isPresenter = NO;
         
-        [weakSelf updateCurrentViewControllerPresenterStatus];
+        if(weakSelf){
+            if(![classID isEqualToString:weakSelf.classOnGoing.classID]){
+                NSLog(@"The retreive token indicate is not for this class");
+                return;
+            }
+            
+            weakSelf.isPresenter = NO;
+            
+            [weakSelf updateCurrentViewControllerPresenterStatus];
+        }
     };
     
-    //set what to do when receive push notification
-    appDelegate.receivedPushNotificationBlock = ^(NSDictionary *receivedMessage){
-        //for now we don't care the content of push notification,
-        //we check for new class content whenever receive a push notification
-        [weakSelf checkLatestContent];
-    };
+    
 
 }
 
 -(void)dealloc{
     
     [self.serverMC setAllBlocksToNilExceptLogoutBlock];
-    
-    CCAppDelegate *appDelegate = (CCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    appDelegate.receivedPushNotificationBlock = nil;
     
 }
 

@@ -404,7 +404,7 @@
                 break;
                 
             default:
-                NSLog(@"Unknow event occurred! eventCode: %lu",eventCode);
+                NSLog(@"Unknow event occurred! eventCode: %d", (int)eventCode);
                 break;
         }
     });

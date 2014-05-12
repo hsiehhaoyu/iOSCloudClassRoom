@@ -13,6 +13,7 @@
 #import "CCMessageCenter.h"
 #import "CCConfiguration.h"
 #import "CCMiscHelper.h"
+#import "UIBarButtonItem+Image.h"
 
 @interface CCPictureViewController ()
 
@@ -109,10 +110,9 @@
     if(((CCClassTabBarController *)(self.tabBarController)).isPresenter){
         
         UIBarButtonItem *pickImageBarButtonItem = [[UIBarButtonItem alloc]
-                                        initWithTitle:@"I"
-                                        style:UIBarButtonItemStyleBordered
-                                        target:self
-                                        action:@selector(pickImage)];
+                                                   initWithImageOnly:[UIImage imageNamed:@"Photos24"]
+                                                   target:self
+                                                   action:@selector(pickImage)];
 
         self.pictureNavigationItem.rightBarButtonItems = [defaultRightBarButtonItems arrayByAddingObject:pickImageBarButtonItem];
         
@@ -154,8 +154,6 @@
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
-
-
 - (void)viewWillAppear:(BOOL)animated{
     
     //this might change according to the change in different tab, so put here
@@ -173,6 +171,9 @@
         [self getLatestContent];
     }
     
+    
+    //self.contentImageView.clipsToBounds = YES;
+    
 }
 
 - (void)viewDidLoad
@@ -186,7 +187,7 @@
     
     self.s3SM = ((CCClassTabBarController *)(self.tabBarController)).s3SM;
     
-    self.contentImageView.image = [UIImage imageNamed:@"NoSlideAvailable.jpg"];
+    self.contentImageView.image = [UIImage imageNamed:@"no_content_available.png"];
     
     // Do any additional setup after loading the view.
 }

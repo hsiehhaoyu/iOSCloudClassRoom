@@ -11,6 +11,8 @@
 #import "CCConfiguration.h"
 #import "CCMiscHelper.h"
 #import "CCClassTableViewController.h"
+#import "UIBarButtonItem+Image.h"
+#import "CCSettingTableViewController.h"
 
 @interface CCLoginViewController () <UITextFieldDelegate>
 
@@ -75,7 +77,7 @@
                                   }
                               }else{
                                   
-                                  NSLog(@"Conneciotn failed, send result code: %d", sentResult);
+                                  NSLog(@"Conneciotn failed, send result code: %d", (int)sentResult);
                                   
                                   [CCMiscHelper showAlertWithTitle:@"Connection failed"
                                                         andMessage:@"Couldn't connect to server. Please check your network availability and server setting."];
@@ -103,12 +105,11 @@
         if (sender == self) {
             return YES;
         }
-    }else if([identifier isEqualToString:@"Setting"]){
+    }else if([identifier isEqualToString:@"Settings"]){
         return YES;
     }
     return NO;
 }
-
 
 //Let keyboard disappear when user click enter
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -181,6 +182,8 @@
 
 }
 
+
+
 -(void)viewWillAppear:(BOOL)animated{
     
     //for any reason that back to login page, try to logout first
@@ -202,6 +205,8 @@
 -(void)viewDidLoad{
     
     [super viewDidLoad];
+    
+    
     
     self.userIDTextField.delegate = self;
     self.passwordTextField.delegate = self;
