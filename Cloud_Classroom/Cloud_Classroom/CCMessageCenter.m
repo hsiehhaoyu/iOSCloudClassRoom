@@ -34,10 +34,7 @@
 @property (strong,atomic) CCMessage *blockingMessage;
 #endif
 
-#ifdef USE_PUSH_NOTIFICATION_RELOGIN
-@property (strong,nonatomic) NSString *userID;
-@property (strong,nonatomic) NSString *password;
-#endif
+
 
 @end
 
@@ -49,64 +46,7 @@
         NSLog(@"Got a nil message in processReadyToSend, action abort");
         return;
     }
-    
-#ifdef USE_PUSH_NOTIFICATION_RELOGIN
-    if(!self.serverCH.isConnectedToServer){
-        if(![message.command isEqualToString:LOGIN_REQ] &&
-           ![message.command isEqualToString:LOGOUT_REQ]){
-            
-            [self loginWithUserID:self.userID
-                      andPassword:self.password
-                    andDeviceType:IOS
-                     onCompletion:^(SendMessageResult sentResult,
-                                    NSString *status) {
-                         
-                    
-                         //dispatch_async(dispatch_get_main_queue(), ^{
-                             
-                             
-                             if(sentResult == SendMessageResultSucceeded){
-                                 if([status isEqualToString:LOGGED_IN]){
-                                     
-                                     NSLog(@"Logged in before sending message");
-                                     
-                                 }else{
-                                     
-                                     //NSLog(@"Login faild while trying to . status: %@", status);
-                                     
-                                     NSString *failedReason;
-                                     
-                                     if([status isEqualToString:DUPLICATE]){
-                                         
-                                         failedReason = @"You have another login session on another device. Please logout it first.";
-                                         
-                                     }else if([status isEqualToString:LOGIN_FAIL] || [status isEqualToString:INVALID_USER]){
-                                         
-                                         failedReason = @"Incorrect user name or password.";
-                                         
-                                     }else{
-                                         
-                                         failedReason = @"Unknown reason";
-                                     }
-                                     
-                                     NSLog(@"Login Failed before sending message, reason: %@", failedReason);
-                                     
-                                 }
-                             }else{
-                                 
-                                 NSLog(@"Conneciotn failed before login for sending message, send result code: %d", (int)sentResult);
-                                 
-                             }
-                             
-                             
-                        // });
-                         
-                     }];
         
-        }
-    }
-#endif
-    
     //save it if there should be a response come from server
     if(hasResponse){
         [self.sentMessages addObject:message];
@@ -273,10 +213,7 @@
                                       
                                       self.cookieID = arguments[1];
                                       
-#ifdef USE_PUSH_NOTIFICATION_RELOGIN
-                                      self.userID = userID;
-                                      self.password = password;
-#endif
+
                                   }else{
                                       self.cookieID = nil; //May not necessary, but in case
                                   }

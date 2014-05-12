@@ -24,10 +24,9 @@
 
 //if open this, tcp connection will auto disconnect after a certain time
 #define USE_PUSH_NOTIFICATION
-//if need to relogin before sending a message after disconnected
-//#define USE_PUSH_NOTIFICATION_RELOGIN
 
-//whether use alert to block user operation
+
+//whether use alert to block user operation (deprived)
 //#define USE_ALERT_BLOCKING
 
 //====== S3 Server ==============
@@ -120,7 +119,7 @@
 #define TEXT_TYPE @"text"
 
 //in seconds
-#define DEFAULT_SENT_MESSAGES_TIMEOUT 7 //for MessageCenter
+#define DEFAULT_SENT_MESSAGES_TIMEOUT 10 //for MessageCenter
 #define DEFAULT_MESSAGE_QUEUE_TIMEOUT 3 //for CommunicationHandler
 
 //================ NSUserDefault =================

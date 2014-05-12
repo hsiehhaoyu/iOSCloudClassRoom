@@ -173,6 +173,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5C77742E19212B8800644939 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				5C8FBCCD191149C4004200DE /* CCS3ServerManager.h */,
+				5C8FBCCE191149C4004200DE /* CCS3ServerManager.m */,
+				5CE7B5911909358C0055E381 /* CCMiscHelper.h */,
+				5CE7B5921909358C0055E381 /* CCMiscHelper.m */,
+				5C8FBC381910B6F0004200DE /* CCClassHelper.h */,
+				5C8FBC391910B6F0004200DE /* CCClassHelper.m */,
+			);
+			name = Tools;
+			sourceTree = "<group>";
+		};
 		5C8FBC3B1910FF51004200DE /* AWS */ = {
 			isa = PBXGroup;
 			children = (
@@ -255,6 +268,7 @@
 				5CB294E618F6383800A2AB45 /* CCConfiguration.h */,
 				5CD631CC18F4DF9200FF29F0 /* Main.storyboard */,
 				5CA4952E190328470007FD28 /* Unit */,
+				5C77742E19212B8800644939 /* Tools */,
 				5CD631F418F4E08600FF29F0 /* Models */,
 				5CD631EF18F4DFAE00FF29F0 /* Controllers */,
 				5CD631D218F4DF9200FF29F0 /* Images.xcassets */,
@@ -319,12 +333,6 @@
 		5CD631F418F4E08600FF29F0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				5C8FBCCD191149C4004200DE /* CCS3ServerManager.h */,
-				5C8FBCCE191149C4004200DE /* CCS3ServerManager.m */,
-				5CE7B5911909358C0055E381 /* CCMiscHelper.h */,
-				5CE7B5921909358C0055E381 /* CCMiscHelper.m */,
-				5C8FBC381910B6F0004200DE /* CCClassHelper.h */,
-				5C8FBC391910B6F0004200DE /* CCClassHelper.m */,
 				5CC8221D1901FA3B00E3507E /* CCMessageCenter.h */,
 				5CC8221E1901FA3B00E3507E /* CCMessageCenter.m */,
 				5CB294E718F63A6600A2AB45 /* CCCommunicationHandler.h */,
